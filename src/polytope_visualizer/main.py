@@ -1,7 +1,7 @@
 import tkinter as tk
 from functools import partial
-from gui import CoxeterRenderer
-from diagram import CoxeterDiagram
+from src.polytope_visualizer.gui.renderer import CoxeterRenderer
+from src.polytope_visualizer.diagram import CoxeterDiagram
 
 
 def create_coxeter_entries():
