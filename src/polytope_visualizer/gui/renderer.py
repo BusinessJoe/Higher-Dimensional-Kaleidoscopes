@@ -1,15 +1,15 @@
 import tkinter as tk
 import math
-from project_down import v_project
-from rotate import v_rotate
 import numpy as np
-from diagram import CoxeterDiagram
+from src.polytope_visualizer.project_down import v_project
+from src.polytope_visualizer.rotate import v_rotate
+from src.polytope_visualizer.diagram import CoxeterDiagram
 
 
 class CoxeterRenderer(tk.Frame):
     def __init__(self, root, width, height, *args, **kwargs):
         super().__init__(root, *args, **kwargs)
-        self.diagram = CoxeterDiagram([True, False, False], [5, 3])
+        self.diagram = CoxeterDiagram([True, True, False], [5, 3])
         self.dimension = self.diagram.dimension
         self.points = self.diagram.polytope()
 
