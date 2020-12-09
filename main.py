@@ -1,24 +1,21 @@
-# TODO fix coordinate_generator.py to work with all linear diagrams
 # TODO find another method of rotation
 from tkinter import *
 import math
 from functools import partial
-import coordinate_generator as coord_gen
 from project_down import v_project
 from rotate import v_rotate
 import numpy as np
+from diagram import CoxeterDiagram
 
 # Generation of points
-diagram = [[5, 1],
-           [3, 0],
-           [0, 0]]
-dimension = len(diagram)
+diagram = CoxeterDiagram([True, False, False], [5, 3])
+dimension = diagram.dimension
 scaling = 100
 dotSize = 20
 screenDist = 300
 eyeDist = 600
 iterations = 10
-points = coord_gen.generatePointsFromDiagram(diagram, dimension, iterations)
+points = diagram.polytope()
 
 # Set up a zero array for the angles
 angles = [0]*3
@@ -81,7 +78,7 @@ def create_coxeter_entries():
 
     try:
         size = int(diagram_size.get())
-    except:
+    except ValueError:
         # TODO fix
         diagram_size.delete(0)
         diagram_size.insert(0, '0')
@@ -110,23 +107,18 @@ def generate_diagram():
     coxeter_angles = []
     active = []
 
-    try:
-        for entry in coxeter_list.values():
-            coxeter_angles.append(int(entry.get()))
-        coxeter_angles.append(0)
-        for entry in active_list.values():
-            active.append(int(entry.get()))
+    for entry in coxeter_list.values():
+        coxeter_angles.append(int(entry.get()))
+    coxeter_angles.append(0)
+    for entry in active_list.values():
+        active.append(int(entry.get()))
 
-        diagram = np.array(list(zip(coxeter_angles, active)))
-        dimension = len(diagram)
-        points = coord_gen.generatePointsFromDiagram(diagram, len(diagram), iterations)
-        draw()
+    diagram = CoxeterDiagram(active, coxeter_angles)
+    dimension = diagram.dimension
+    points = diagram.polytope()
+    draw()
 
-        confirm_message.set('Success')
-    except Exception as e:
-        draw()
-        confirm_message.set('An error has occurred')
-        print(e)
+    confirm_message.set('Success')
 
 
 # GUI
