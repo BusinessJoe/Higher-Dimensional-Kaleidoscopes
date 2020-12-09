@@ -1,8 +1,6 @@
 import numpy as np
 import math
 
-sample = np.array([[1, 1], [-1, -1]])
-
 
 def rotate(point, angle, axis1, axis2, dimension):
     matrix = np.identity(dimension)
@@ -18,4 +16,5 @@ def rotate(point, angle, axis1, axis2, dimension):
 v_rotate = np.vectorize(rotate, signature='(i),(),(),(),()->(n)')
 
 if __name__ == '__main__':
+    sample = np.array([[1, 1], [-1, -1]])
     print(v_rotate(sample, math.pi/4, 0, 1, 2))
