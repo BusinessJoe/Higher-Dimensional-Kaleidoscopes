@@ -1,4 +1,6 @@
+"""Module for generating polytope vertices from Coxeter diagrams"""
 import numpy as np
+
 
 # For some reason, with these settings the correct output isn't made? Maybe?
 
@@ -7,8 +9,8 @@ import numpy as np
 # The second column represents which nodes are "active"
 
 
-
-def generateNormals(diag, dim):
+def generate_normals(diag, dim):
+    """Creates normals to mirrors given a Coxeter diagram"""
     output = np.zeros((dim, dim))
     output[0][0] = 1
 
@@ -23,33 +25,40 @@ def generateNormals(diag, dim):
     return output
 
 
-def normalReflection(point, normal):
+def normal_reflection(point, normal):
+    """Reflect a point through a mirror defined by a normal vector"""
     return [point - 2 * np.dot(point, normal) * normal]
 
 
-def removeDoubles(point):
+def remove_doubles(point):
+    """Remove duplicate points"""
     return np.unique(np.round(point, 5), axis=0)
 
 
-def generateStartPoint(normalValues, activationValues):
-    print(normalValues)
-    print(activationValues)
-    genPoint = np.linalg.solve(normalValues, activationValues)
+def generate_start_point(normal_values, activation_values):
+    """Places a point that is on each of the deactivated mirrors and
+    off the activated mirrors"""
+    print(normal_values)
+    print(activation_values)
+    genPoint = np.linalg.solve(normal_values, activation_values)
     print(genPoint)
-    print(np.allclose(np.dot(normalValues, genPoint), activationValues))
+    print(np.allclose(np.dot(normal_values, genPoint), activation_values))
     return np.array([genPoint])
 
 
-def generatePointsFromDiagram(diagram, dimension, iterations):
-    normals = generateNormals(diagram, dimension)
+def generate_points_from_diagram(diagram, dimension, iterations):
+    """Returns the vertices of a polytope defined by the Coxeter diagram"""
+    normals = generate_normals(diagram, dimension)
 
-    points = generateStartPoint(normals, np.array(diagram)[:, 1])
-    #points = np.array([[0, 1.414, 0.1]])
+    points = generate_start_point(normals, np.array(diagram)[:, 1])
+    # points = np.array([[0, 1.414, 0.1]])
+
+    # reflect points across mirrors multiple times
     for iteration in range(iterations):
         for d in range(dimension):
             for p in range(len(points)):
-                reflected_points = normalReflection(points[p], normals[d])
+                reflected_points = normal_reflection(points[p], normals[d])
                 points = np.concatenate((points, reflected_points))
 
-            points = removeDoubles(points)
+            points = remove_doubles(points)
     return points
