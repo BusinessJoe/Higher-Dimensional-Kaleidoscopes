@@ -30,7 +30,7 @@ def create_coxeter_entries():
         active_list[index].grid(row=index + 1, column=1, pady=2)
 
 
-def generate_diagram(renderer):
+def generate_diagram(renderer: CoxeterRenderer):
     coxeter_angles = []
     active = []
 
@@ -48,79 +48,80 @@ def generate_diagram(renderer):
     confirm_message.set('Success')
 
 
-# GUI
-coxeter_list = dict()
-active_list = dict()
+if __name__ == "__main__":
+    # GUI
+    coxeter_list = dict()
+    active_list = dict()
 
-screenWidth = 900
-screenHeight = 600
+    screenWidth = 900
+    screenHeight = 600
 
-root = tk.Tk()
-root.title("Projection")
-root.resizable(0, 0)
+    root = tk.Tk()
+    root.title("Projection")
+    root.resizable(0, 0)
 
-confirm_message = tk.StringVar()
+    confirm_message = tk.StringVar()
 
-# Create frames for the layout
-left_frame = tk.Frame(root, borderwidth=2, relief="groove")
-right_frame = tk.Frame(root, borderwidth=2, relief="groove")
+    # Create frames for the layout
+    left_frame = tk.Frame(root, borderwidth=2, relief="groove")
+    right_frame = tk.Frame(root, borderwidth=2, relief="groove")
 
-# Create a frame for the diagram entries
-coxeter_frame = tk.Frame(right_frame, width=300, borderwidth=2, relief="groove")
+    # Create a frame for the diagram entries
+    coxeter_frame = tk.Frame(right_frame, width=300, borderwidth=2, relief="groove")
 
-# Put frames in the root window
-left_frame.grid(row=0, column=0, sticky=tk.NSEW)
-right_frame.grid(row=0, column=1, sticky=tk.NSEW)
-coxeter_frame.grid(row=0, column=0, sticky=tk.EW)
+    # Put frames in the root window
+    left_frame.grid(row=0, column=0, sticky=tk.NSEW)
+    right_frame.grid(row=0, column=1, sticky=tk.NSEW)
+    coxeter_frame.grid(row=0, column=0, sticky=tk.EW)
 
-# Set up the canvas in the left frame
-renderer = CoxeterRenderer(left_frame, screenWidth, screenHeight)
+    # Set up the canvas in the left frame
+    renderer = CoxeterRenderer(left_frame, screenWidth, screenHeight)
 
-# Create scale bars for angles and put them in the left frame
-bar = dict()
-for i in range(3):
-    bar[i] = tk.Scale(left_frame, from_=0, to=360, resolution=0.1, orient=tk.HORIZONTAL, length=200,
-                      command=partial(renderer.update_angle, i))
-    bar[i].grid(row=i + 1, column=0, sticky=tk.W, padx=10)
+    # Create scale bars for angles and put them in the left frame
+    bar = dict()
+    for i in range(3):
+        bar[i] = tk.Scale(left_frame, from_=0, to=360, resolution=0.1, orient=tk.HORIZONTAL, length=200,
+                          command=partial(renderer.update_angle, i))
+        bar[i].grid(row=i + 1, column=0, sticky=tk.W, padx=10)
 
-# Create scale bars for scaling amount and distances
-scale = tk.Scale(left_frame, from_=0, to=300, length=200, label='Scaling', orient=tk.HORIZONTAL,
-                 command=partial(renderer.set_scale))
-dot_size_scale = tk.Scale(left_frame, from_=0, to=100, length=200, label='Dot Size', orient=tk.HORIZONTAL,
-                          command=partial(renderer.set_dot_size))
-screen_scale = tk.Scale(left_frame, from_=0, to=1000, length=200, label='Screen Distance', orient=tk.HORIZONTAL,
-                        command=partial(renderer.set_screen_dist))
-eye_scale = tk.Scale(left_frame, from_=0, to=1000, length=200, label='Eye Distance', orient=tk.HORIZONTAL,
-                     command=partial(renderer.set_eye_dist))
-scale.set(100)
-dot_size_scale.set(20)
-screen_scale.set(300)
-eye_scale.set(600)
+    # Create scale bars for scaling amount and distances
+    scale = tk.Scale(left_frame, from_=0, to=300, length=200, label='Scaling', orient=tk.HORIZONTAL,
+                     command=partial(renderer.set_scale))
+    dot_size_scale = tk.Scale(left_frame, from_=0, to=100, length=200, label='Dot Size', orient=tk.HORIZONTAL,
+                              command=partial(renderer.set_dot_size))
+    screen_scale = tk.Scale(left_frame, from_=0, to=1000, length=200, label='Screen Distance', orient=tk.HORIZONTAL,
+                            command=partial(renderer.set_screen_dist))
+    eye_scale = tk.Scale(left_frame, from_=0, to=1000, length=200, label='Eye Distance', orient=tk.HORIZONTAL,
+                         command=partial(renderer.set_eye_dist))
+    scale.set(100)
+    dot_size_scale.set(20)
+    screen_scale.set(300)
+    eye_scale.set(600)
 
-# Create the generation related widgets
-diagram_size = tk.Entry(coxeter_frame, width=5)
-submit_size = tk.Button(coxeter_frame, text='Set size', command=create_coxeter_entries)
+    # Create the generation related widgets
+    diagram_size = tk.Entry(coxeter_frame, width=5)
+    submit_size = tk.Button(coxeter_frame, text='Set size', command=create_coxeter_entries)
 
-# Create button to confirm diagram settings
-confirm = tk.Button(right_frame, text='Confirm', command=partial(generate_diagram, renderer))
-confirm.grid(row=1, column=0, pady=5)
+    # Create button to confirm diagram settings
+    confirm = tk.Button(right_frame, text='Confirm', command=partial(generate_diagram, renderer))
+    confirm.grid(row=1, column=0, pady=5)
 
-# Create label for the confirm result
-confirm_result = tk.Label(right_frame, textvariable=confirm_message, width=20)
-confirm_result.grid(row=2, column=0)
+    # Create label for the confirm result
+    confirm_result = tk.Label(right_frame, textvariable=confirm_message, width=20)
+    confirm_result.grid(row=2, column=0)
 
-# Layout canvas in left frame
-renderer.grid(row=0, column=0, columnspan=3)
+    # Layout canvas in left frame
+    renderer.grid(row=0, column=0, columnspan=3)
 
-# Layout scale bars for scaling amount and distances in left frame
-scale.grid(row=1, column=1, sticky=tk.W, pady=10)
-dot_size_scale.grid(row=1, column=2, sticky=tk.W)
-screen_scale.grid(row=2, column=1, sticky=tk.W, pady=10)
-eye_scale.grid(row=3, column=1, sticky=tk.W, pady=10)
+    # Layout scale bars for scaling amount and distances in left frame
+    scale.grid(row=1, column=1, sticky=tk.W, pady=10)
+    dot_size_scale.grid(row=1, column=2, sticky=tk.W)
+    screen_scale.grid(row=2, column=1, sticky=tk.W, pady=10)
+    eye_scale.grid(row=3, column=1, sticky=tk.W, pady=10)
 
-# Layout the widgets in the right frame
-diagram_size.grid(row=0, column=0, sticky=tk.W, padx=10)
-submit_size.grid(row=0, column=1, sticky=tk.E, pady=5)
+    # Layout the widgets in the right frame
+    diagram_size.grid(row=0, column=0, sticky=tk.W, padx=10)
+    submit_size.grid(row=0, column=1, sticky=tk.E, pady=5)
 
-renderer.draw()
-root.mainloop()
+    renderer.draw()
+    root.mainloop()
