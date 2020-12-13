@@ -40,10 +40,7 @@ def generate_diagram(renderer: CoxeterRenderer):
     for entry in active_list.values():
         active.append(int(entry.get()))
 
-    renderer.diagram = CoxeterDiagram(active, coxeter_angles)
-    renderer.dimension = renderer.diagram.dimension
-    renderer.points = renderer.points
-    renderer.draw()
+    renderer.set_diagram(CoxeterDiagram(active, coxeter_angles))
 
     confirm_message.set('Success')
 
@@ -75,7 +72,7 @@ if __name__ == "__main__":
     coxeter_frame.grid(row=0, column=0, sticky=tk.EW)
 
     # Set up the canvas in the left frame
-    renderer = CoxeterRenderer(left_frame, screenWidth, screenHeight)
+    renderer = CoxeterRenderer(left_frame, screenWidth, screenHeight, CoxeterDiagram([1, 0, 0], [4, 3]))
 
     # Create scale bars for angles and put them in the left frame
     bar = dict()
@@ -98,9 +95,6 @@ if __name__ == "__main__":
     screen_scale.set(300)
     eye_scale.set(600)
 
-    iterations_scale = tk.Scale(left_frame, from_=0, to=20, length=200, label='Iterations', orient=tk.HORIZONTAL,
-                                command=partial(renderer.set_iterations))
-
     # Create the generation related widgets
     diagram_size = tk.Entry(coxeter_frame, width=5)
     submit_size = tk.Button(coxeter_frame, text='Set size', command=create_coxeter_entries)
@@ -121,8 +115,6 @@ if __name__ == "__main__":
     dot_size_scale.grid(row=1, column=2, sticky=tk.W)
     screen_scale.grid(row=2, column=1, sticky=tk.W, pady=10)
     eye_scale.grid(row=3, column=1, sticky=tk.W, pady=10)
-
-    iterations_scale.grid(row=2, column=2, sticky=tk.W)
 
     # Layout the widgets in the right frame
     diagram_size.grid(row=0, column=0, sticky=tk.W, padx=10)

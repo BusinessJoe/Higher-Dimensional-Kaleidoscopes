@@ -7,12 +7,13 @@ from src.polytope_visualizer.diagram import CoxeterDiagram
 
 
 class CoxeterRenderer(tk.Frame):
-    def __init__(self, root, width, height, *args, **kwargs):
+    def __init__(self, root, width, height, diagram: CoxeterDiagram, *args, **kwargs):
         super().__init__(root, *args, **kwargs)
         self.iterations = 10
-        self.diagram = CoxeterDiagram([1, 0, 0], [4, 3])
-        self.dimension = self.diagram.dimension
-        self.points = self.diagram.polytope(self.iterations)
+
+        self.diagram = diagram
+        self.dimension = diagram.dimension
+        self.points = diagram.polytope()
 
         self.width, self.height = width, height
         self.canvas = tk.Canvas(self, width=width, height=height, borderwidth=5, relief="groove")
@@ -47,27 +48,24 @@ class CoxeterRenderer(tk.Frame):
             self.canvas.create_oval(p[0] - p[2] + self.width / 2, p[1] - p[2] + self.height / 2,
                           p[0] + p[2] + self.width / 2, p[1] + p[2] + self.height / 2)
 
+        self.canvas.after(1000//60, self.draw)
+
+    def set_diagram(self, diagram: CoxeterDiagram):
+        self.diagram = diagram
+        self.dimension = diagram.dimension
+        self.points = diagram.polytope()
+
     def update_angle(self, index, value):
         self.angles[index] = float(value) * math.pi / 180
-        self.draw()
 
     def set_scale(self, scale: str):
         self.scaling = float(scale)
-        self.draw()
 
     def set_dot_size(self, size: str):
         self.dot_size = float(size)
-        self.draw()
 
     def set_screen_dist(self, dist: str):
         self.screen_dist = float(dist)
-        self.draw()
 
     def set_eye_dist(self, dist: str):
         self.eye_dist = float(dist)
-        self.draw()
-
-    def set_iterations(self, iterations: str):
-        self.iterations = int(iterations)
-        self.points = self.diagram.polytope(self.iterations)
-        self.draw()
