@@ -44,11 +44,16 @@ class CoxeterRenderer(tk.Frame):
 
         points_and_heights = np.concatenate((proj_points, heights), axis=1)
 
-        for p in points_and_heights:
-            self.canvas.create_oval(p[0] - p[2] + self.width / 2, p[1] - p[2] + self.height / 2,
-                          p[0] + p[2] + self.width / 2, p[1] + p[2] + self.height / 2)
+        # Sort points based on distance to camera
+        indices = np.argsort(heights, axis=0)
+        sorted_points_and_heights = np.take_along_axis(points_and_heights, indices, axis=0)
 
-        self.canvas.after(1000//60, self.draw)
+        for p in sorted_points_and_heights:
+            self.canvas.create_oval(p[0] - p[2] + self.width / 2, p[1] - p[2] + self.height / 2,
+                                    p[0] + p[2] + self.width / 2, p[1] + p[2] + self.height / 2,
+                                    fill="white")
+
+        self.canvas.after(1000 // 60, self.draw)
 
     def set_diagram(self, diagram: CoxeterDiagram):
         self.diagram = diagram
