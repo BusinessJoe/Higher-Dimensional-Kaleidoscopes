@@ -27,9 +27,10 @@ def normal_reflection(point, normal):
     return [point - 2 * np.dot(point, normal) * normal]
 
 
-def remove_doubles(point):
+def remove_doubles(points):
     """Remove duplicate points"""
-    return np.unique(np.round(point, 5), axis=0)
+    _, indices = np.unique(np.round(points, 5), axis=0, return_index=True)
+    return points[indices]
 
 
 class CoxeterDiagram:
@@ -82,6 +83,6 @@ class CoxeterDiagram:
 
 if __name__ == "__main__":
     # Poor numerical stability of algorithms creates many close points
-    d = CoxeterDiagram([1, 1, 0], [3, 3])
+    d = CoxeterDiagram([0, 0, 1], [5, 3])
     print(d.polytope())
     print(len(d.polytope()))
