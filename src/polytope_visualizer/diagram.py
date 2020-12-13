@@ -1,14 +1,25 @@
 from typing import List
 import numpy as np
 
+from src.polytope_visualizer.utils import get_axis_vector
+
 
 def _generate_start_point(normals, activation_values):
     """Places a point that is on each of the deactivated mirrors and
     off the activated mirrors"""
-    gen_point = np.linalg.solve(normals, activation_values)
-    print(gen_point)
-    print(np.allclose(np.dot(normals, gen_point), activation_values))
-    return np.array([gen_point])
+
+    # Find intersections of planes where each intersection is a vector
+    intersections = np.empty(normals.shape)
+    for idx in range(normals.shape[0]):
+        intersections[idx] = get_axis_vector(idx, normals)
+
+    # Flip intersection vectors so that they all point in the same direction
+    for idx in range(1, intersections.shape[0]):
+        if np.dot(intersections[idx], intersections[idx-1]) < 0:
+            intersections[idx] *= -1
+
+    v = np.matmul(intersections.T, activation_values)
+    return v / np.linalg.norm(v)
 
 
 def normal_reflection(point, normal):
@@ -47,17 +58,17 @@ class CoxeterDiagram:
                     normals[i][j] = np.cos(np.pi / self.edges[i - 1]) / normals[i - 1][j]
                 else:
                     normals[i][j] = np.sqrt(1 - np.square(normals[i][j - 1]))
+
         return normals
 
-    def polytope(self):
+    def polytope(self, iterations=100):
         """Returns the vertices of the polytope defined by this diagram"""
         normals = self.mirror_normals()
 
-        points = _generate_start_point(normals, self.nodes)
-        # points = np.array([[0, 1.414, 0.1]])
+        points = _generate_start_point(normals, self.nodes).reshape(1, -1)
 
         # reflect points across mirrors multiple times
-        for iteration in range(100):
+        for iteration in range(iterations):
             for d in range(self.dimension):
                 for p in range(len(points)):
                     reflected_points = normal_reflection(points[p], normals[d])
@@ -68,5 +79,7 @@ class CoxeterDiagram:
 
 
 if __name__ == "__main__":
-    d = CoxeterDiagram([1, 0, 0], [4, 3])
+    # Poor numerical stability of algorithms creates many close points
+    d = CoxeterDiagram([1, 1, 0], [3, 3])
     print(d.polytope())
+    print(len(d.polytope()))

@@ -9,9 +9,10 @@ from src.polytope_visualizer.diagram import CoxeterDiagram
 class CoxeterRenderer(tk.Frame):
     def __init__(self, root, width, height, *args, **kwargs):
         super().__init__(root, *args, **kwargs)
-        self.diagram = CoxeterDiagram([True, True, False], [5, 3])
+        self.iterations = 10
+        self.diagram = CoxeterDiagram([1, 0, 0], [4, 3])
         self.dimension = self.diagram.dimension
-        self.points = self.diagram.polytope()
+        self.points = self.diagram.polytope(self.iterations)
 
         self.width, self.height = width, height
         self.canvas = tk.Canvas(self, width=width, height=height, borderwidth=5, relief="groove")
@@ -21,7 +22,6 @@ class CoxeterRenderer(tk.Frame):
         self.dot_size = 20
         self.screen_dist = 300
         self.eye_dist = 600
-        self.iterations = 10
 
         # Set up a zero array for the angles
         self.angles = [0] * 3
@@ -65,4 +65,9 @@ class CoxeterRenderer(tk.Frame):
 
     def set_eye_dist(self, dist: str):
         self.eye_dist = float(dist)
+        self.draw()
+
+    def set_iterations(self, iterations: str):
+        self.iterations = int(iterations)
+        self.points = self.diagram.polytope(self.iterations)
         self.draw()

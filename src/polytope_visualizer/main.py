@@ -42,7 +42,7 @@ def generate_diagram(renderer: CoxeterRenderer):
 
     renderer.diagram = CoxeterDiagram(active, coxeter_angles)
     renderer.dimension = renderer.diagram.dimension
-    renderer.points = renderer.diagram.polytope()
+    renderer.points = renderer.points
     renderer.draw()
 
     confirm_message.set('Success')
@@ -98,6 +98,9 @@ if __name__ == "__main__":
     screen_scale.set(300)
     eye_scale.set(600)
 
+    iterations_scale = tk.Scale(left_frame, from_=0, to=20, length=200, label='Iterations', orient=tk.HORIZONTAL,
+                                command=partial(renderer.set_iterations))
+
     # Create the generation related widgets
     diagram_size = tk.Entry(coxeter_frame, width=5)
     submit_size = tk.Button(coxeter_frame, text='Set size', command=create_coxeter_entries)
@@ -118,6 +121,8 @@ if __name__ == "__main__":
     dot_size_scale.grid(row=1, column=2, sticky=tk.W)
     screen_scale.grid(row=2, column=1, sticky=tk.W, pady=10)
     eye_scale.grid(row=3, column=1, sticky=tk.W, pady=10)
+
+    iterations_scale.grid(row=2, column=2, sticky=tk.W)
 
     # Layout the widgets in the right frame
     diagram_size.grid(row=0, column=0, sticky=tk.W, padx=10)
