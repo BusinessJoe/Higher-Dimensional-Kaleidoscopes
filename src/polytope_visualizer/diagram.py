@@ -75,6 +75,8 @@ class CoxeterDiagram:
                     points = np.concatenate((points, reflected_points))
 
                 points = remove_doubles(points)
+                if points.shape[0] > 1000:
+                    raise ValueError('Too many generated points')
         return points
 
 
