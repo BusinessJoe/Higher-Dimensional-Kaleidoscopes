@@ -4,6 +4,7 @@ from PyQt5.QtCore import Qt
 
 from ..math.diagram import CoxeterDiagram
 from .slider import LabelledSlider
+from .diagram_renderer import DiagramRenderer
 
 
 class DiagramEditor(QWidget):
@@ -31,6 +32,8 @@ class DiagramEditor(QWidget):
         self.button_layout = QtWidgets.QHBoxLayout()
         self.button_layout.addStretch(1)
 
+        self.diagram_renderer = DiagramRenderer()
+
         # Slider for diagram length
         self.sl = LabelledSlider("Diagram Length", Qt.Horizontal)
         self.sl.sl.setMinimum(2)
@@ -39,22 +42,27 @@ class DiagramEditor(QWidget):
         self.sl.sl.setTickPosition(QSlider.TicksBelow)
         self.sl.sl.setTickInterval(1)
         self.sl.sl.setMinimumWidth(400)
+        self.sl.sl.setPageStep(1)
         self.sl.sl.valueChanged.connect(self.set_length)
 
-        layout.addWidget(self.sl)
-        layout.addLayout(self.button_layout)
-
+        # Add diagram editing widgets
         for i in range(self.length - 1):
             self.add_node_widget()
             self.add_angle_widget()
         self.add_node_widget()
 
+        # Confirm button
         confirm = QPushButton("Confirm")
         confirm.clicked.connect(lambda: self.diagramConfirmed.emit(self.diagram()))
+
+        self.diagram_renderer.set_diagram(self.diagram())
+        self.diagramChanged.connect(self.diagram_renderer.set_diagram)
+
+        layout.addWidget(self.diagram_renderer)
+        layout.addWidget(self.sl)
+        layout.addLayout(self.button_layout)
         layout.addWidget(confirm)
-
         layout.addStretch(1)
-
         self.setLayout(layout)
 
     def set_length(self, new_length):
@@ -81,6 +89,7 @@ class DiagramEditor(QWidget):
 
     def add_angle_widget(self):
         spinbox = QSpinBox()
+        spinbox.setMinimum(3)
         spinbox.valueChanged.connect(lambda: self.diagramChanged.emit(self.diagram()))
         self.angle_widgets.append(spinbox)
         self.button_layout.insertWidget(self.button_layout.count() - 1, spinbox)
