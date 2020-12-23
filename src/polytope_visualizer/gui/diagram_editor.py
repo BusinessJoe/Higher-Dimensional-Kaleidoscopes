@@ -50,6 +50,8 @@ class DiagramEditor(QWidget):
         confirm.clicked.connect(lambda: self.diagramConfirmed.emit(self.diagram()))
         layout.addWidget(confirm)
 
+        layout.addStretch(1)
+
         self.setLayout(layout)
 
     def set_length(self, new_length):
