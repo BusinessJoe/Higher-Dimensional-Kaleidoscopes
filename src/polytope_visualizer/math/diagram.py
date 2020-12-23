@@ -1,7 +1,7 @@
 from typing import List
 import numpy as np
 
-from src.polytope_visualizer.utils import get_axis_vector
+from ..math.utils import get_axis_vector
 
 
 def _generate_start_point(normals, activation_values):

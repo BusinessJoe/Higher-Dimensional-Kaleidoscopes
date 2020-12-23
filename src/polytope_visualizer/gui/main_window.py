@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QWidget, QHBoxLayout
 
-from ..diagram import CoxeterDiagram
+from src.polytope_visualizer.math.diagram import CoxeterDiagram
 from .polytope_renderer import Renderer
 from .diagram_editor import DiagramEditor
 

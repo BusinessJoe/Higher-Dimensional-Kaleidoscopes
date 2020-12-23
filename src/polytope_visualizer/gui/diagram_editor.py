@@ -2,7 +2,7 @@ from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QWidget, QSlider, QPushButton, QSpinBox
 from PyQt5.QtCore import Qt
 
-from src.polytope_visualizer.diagram import CoxeterDiagram
+from ..math.diagram import CoxeterDiagram
 
 
 class DiagramEditor(QWidget):

@@ -7,9 +7,9 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPainter
 
 import numpy as np
-from src.polytope_visualizer.project_down import v_project
-from src.polytope_visualizer.rotate import v_rotate
-from src.polytope_visualizer.diagram import CoxeterDiagram
+from ..math.project_down import v_project
+from ..math.rotate import v_rotate
+from ..math.diagram import CoxeterDiagram
 
 
 class Renderer(QWidget):
