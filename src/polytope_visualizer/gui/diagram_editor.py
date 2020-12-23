@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QWidget, QSlider, QPushButton, QSpinBox
 from PyQt5.QtCore import Qt
 
 from ..math.diagram import CoxeterDiagram
+from .slider import LabelledSlider
 
 
 class DiagramEditor(QWidget):
@@ -28,15 +29,17 @@ class DiagramEditor(QWidget):
     def init_ui(self):
         layout = QtWidgets.QVBoxLayout()
         self.button_layout = QtWidgets.QHBoxLayout()
+        self.button_layout.addStretch(1)
 
         # Slider for diagram length
-        self.sl = QtWidgets.QSlider(Qt.Horizontal)
-        self.sl.setMinimum(2)
-        self.sl.setMaximum(6)
-        self.sl.setValue(3)
-        self.sl.setTickPosition(QSlider.TicksBelow)
-        self.sl.setTickInterval(1)
-        self.sl.valueChanged.connect(self.set_length)
+        self.sl = LabelledSlider("Diagram Length", Qt.Horizontal)
+        self.sl.sl.setMinimum(2)
+        self.sl.sl.setMaximum(6)
+        self.sl.sl.setValue(3)
+        self.sl.sl.setTickPosition(QSlider.TicksBelow)
+        self.sl.sl.setTickInterval(1)
+        self.sl.sl.setMinimumWidth(400)
+        self.sl.sl.valueChanged.connect(self.set_length)
 
         layout.addWidget(self.sl)
         layout.addLayout(self.button_layout)
@@ -70,7 +73,7 @@ class DiagramEditor(QWidget):
         toggle.setCheckable(True)
         toggle.clicked.connect(lambda: self.diagramChanged.emit(self.diagram()))
         self.node_widgets.append(toggle)
-        self.button_layout.addWidget(toggle)
+        self.button_layout.insertWidget(self.button_layout.count() - 1, toggle)
 
     def remove_node_widget(self):
         toggle = self.node_widgets.pop(-1)
@@ -80,7 +83,7 @@ class DiagramEditor(QWidget):
         spinbox = QSpinBox()
         spinbox.valueChanged.connect(lambda: self.diagramChanged.emit(self.diagram()))
         self.angle_widgets.append(spinbox)
-        self.button_layout.addWidget(spinbox)
+        self.button_layout.insertWidget(self.button_layout.count() - 1, spinbox)
 
     def remove_angle_widget(self):
         spinbox = self.angle_widgets.pop(-1)

@@ -10,6 +10,7 @@ import numpy as np
 from ..math.project_down import v_project
 from ..math.rotate import v_rotate
 from ..math.diagram import CoxeterDiagram
+from .slider import LabelledSlider
 
 
 class Renderer(QWidget):
@@ -44,47 +45,47 @@ class Renderer(QWidget):
         vlayout.addWidget(self.canvas)
 
         for i in range(3):
-            angle_slider = QSlider(Qt.Horizontal)
-            angle_slider.setMinimum(0)
-            angle_slider.setMaximum(360)
-            angle_slider.setMaximumWidth(200)
-            angle_slider.valueChanged.connect(partial(self.update_angle, i))
+            angle_slider = LabelledSlider("Angle", Qt.Horizontal)
+            angle_slider.sl.setMinimum(0)
+            angle_slider.sl.setMaximum(360)
+            angle_slider.sl.setMaximumWidth(200)
+            angle_slider.sl.valueChanged.connect(partial(self.update_angle, i))
             grid.addWidget(angle_slider, i, 0)
 
         # Scale slider
-        slider = QSlider(Qt.Horizontal)
-        slider.setMinimum(0)
-        slider.setMaximum(300)
-        slider.setValue(self.scaling)
-        slider.setMaximumWidth(200)
-        slider.valueChanged.connect(self.set_scale)
+        slider = LabelledSlider("Scale", Qt.Horizontal)
+        slider.sl.setMinimum(0)
+        slider.sl.setMaximum(300)
+        slider.sl.setValue(self.scaling)
+        slider.sl.setMaximumWidth(200)
+        slider.sl.valueChanged.connect(self.set_scale)
         grid.addWidget(slider, 0, 1)
 
         # Screen dist slider
-        slider = QSlider(Qt.Horizontal)
-        slider.setMinimum(0)
-        slider.setMaximum(1000)
-        slider.setValue(self.screen_dist)
-        slider.setMaximumWidth(200)
-        slider.valueChanged.connect(self.set_screen_dist)
+        slider = LabelledSlider("Screen Distance", Qt.Horizontal)
+        slider.sl.setMinimum(0)
+        slider.sl.setMaximum(1000)
+        slider.sl.setValue(self.screen_dist)
+        slider.sl.setMaximumWidth(200)
+        slider.sl.valueChanged.connect(self.set_screen_dist)
         grid.addWidget(slider, 1, 1)
 
         # Eye dist slider
-        slider = QSlider(Qt.Horizontal)
-        slider.setMinimum(0)
-        slider.setMaximum(1000)
-        slider.setValue(self.eye_dist)
-        slider.setMaximumWidth(200)
-        slider.valueChanged.connect(self.set_eye_dist)
+        slider = LabelledSlider("Eye Distance", Qt.Horizontal)
+        slider.sl.setMinimum(0)
+        slider.sl.setMaximum(1000)
+        slider.sl.setValue(self.eye_dist)
+        slider.sl.setMaximumWidth(200)
+        slider.sl.valueChanged.connect(self.set_eye_dist)
         grid.addWidget(slider, 2, 1)
 
         # Dot size slider
-        slider = QSlider(Qt.Horizontal)
-        slider.setMinimum(0)
-        slider.setMaximum(100)
-        slider.setValue(self.dot_size)
-        slider.setMaximumWidth(200)
-        slider.valueChanged.connect(self.set_dot_size)
+        slider = LabelledSlider("Dot Size", Qt.Horizontal)
+        slider.sl.setMinimum(0)
+        slider.sl.setMaximum(100)
+        slider.sl.setValue(self.dot_size)
+        slider.sl.setMaximumWidth(200)
+        slider.sl.valueChanged.connect(self.set_dot_size)
         grid.addWidget(slider, 0, 2)
 
         vlayout.addLayout(grid)
