@@ -38,8 +38,8 @@ class CoxeterDiagram:
     def __init__(self, nodes: List[bool], edges: List[int]) -> None:
         """Each node is activated (True) or deactivated (False).
         The value at an edge corresponds to the dihedral angle between the connected nodes."""
-        self.nodes = nodes
-        self.edges = edges
+        self.nodes: List[bool] = nodes
+        self.edges: List[int] = edges
 
         # A linear diagram of with n nodes can be embedded in n-dimensions
         self.dimension = len(nodes)
