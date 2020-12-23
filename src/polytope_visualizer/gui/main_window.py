@@ -9,8 +9,8 @@ class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
 
-        self.renderer = Renderer(CoxeterDiagram([True, False, False], [3, 5]))
         self.diagram_editor = DiagramEditor()
+        self.renderer = Renderer(self.diagram_editor.diagram())
 
         self.diagram_editor.diagramConfirmed.connect(self.renderer.set_diagram)
 

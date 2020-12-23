@@ -27,6 +27,11 @@ class DiagramEditor(QWidget):
 
         self.init_ui()
 
+        self.node_widgets[0].setChecked(True)
+        self.angle_widgets[0].setValue(4)
+
+        self.diagram_renderer.set_diagram(self.diagram())
+
     def init_ui(self):
         layout = QtWidgets.QVBoxLayout()
         self.button_layout = QtWidgets.QHBoxLayout()
