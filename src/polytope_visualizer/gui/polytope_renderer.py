@@ -2,7 +2,7 @@ import math
 from functools import partial
 
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import QWidget, QSlider, QGridLayout, QVBoxLayout
+from PyQt5.QtWidgets import QWidget, QFrame, QSlider, QGridLayout, QVBoxLayout
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPainter
 
@@ -132,7 +132,7 @@ class Renderer(QWidget):
         self.eye_dist = dist
 
 
-class RenderArea(QWidget):
+class RenderArea(QFrame):
     def __init__(self, width, height):
         super().__init__()
 
@@ -140,6 +140,9 @@ class RenderArea(QWidget):
 
         self.width, self.height = width, height
         self.setMinimumSize(width, height)
+
+        self.setStyleSheet("""border:2px solid rgb(0, 0, 0);
+        """)
 
     def paintEvent(self, e):
         qp = QPainter()
