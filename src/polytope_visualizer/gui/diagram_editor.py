@@ -1,5 +1,3 @@
-import sys
-from functools import partial
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QWidget, QSlider, QPushButton, QSpinBox
 from PyQt5.QtCore import Qt
@@ -91,17 +89,3 @@ class DiagramEditor(QWidget):
         angles = [s.value() for s in self.angle_widgets]
 
         return CoxeterDiagram(nodes, angles)
-
-
-if __name__ == "__main__":
-    sys._excepthook = sys.excepthook
-    def exception_hook(exctype, value, traceback):
-        print(exctype, value, traceback)
-        sys._excepthook(exctype, value, traceback)
-        sys.exit(1)
-    sys.excepthook = exception_hook
-
-    app = QtWidgets.QApplication(sys.argv)
-    mainWin = DiagramEditor()
-    mainWin.show()
-    sys.exit(app.exec_())
