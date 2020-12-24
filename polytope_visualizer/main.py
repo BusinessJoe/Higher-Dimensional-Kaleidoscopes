@@ -1,7 +1,7 @@
 import sys
 from PyQt5 import QtWidgets
 
-from src.polytope_visualizer.gui.main_window import MainWindow
+from polytope_visualizer.gui.main_window import MainWindow
 
 if __name__ == "__main__":
     sys._excepthook = sys.excepthook

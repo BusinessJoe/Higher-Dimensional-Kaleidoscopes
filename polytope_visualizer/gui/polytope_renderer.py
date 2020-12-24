@@ -2,14 +2,14 @@ import math
 from functools import partial
 
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import QWidget, QFrame, QSlider, QGridLayout, QVBoxLayout
+from PyQt5.QtWidgets import QWidget, QFrame, QGridLayout, QVBoxLayout
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPainter
 
 import numpy as np
-from ..math.project_down import v_project
-from ..math.rotate import v_rotate
-from ..math.diagram import CoxeterDiagram
+from polytope_visualizer.math.project_down import v_project
+from polytope_visualizer.math.rotate import v_rotate
+from polytope_visualizer.math.diagram import CoxeterDiagram
 from .slider import LabelledSlider
 
 

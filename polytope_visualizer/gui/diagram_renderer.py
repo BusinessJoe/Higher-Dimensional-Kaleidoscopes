@@ -1,10 +1,9 @@
 from typing import Optional
 
-from PyQt5 import QtCore
-from PyQt5.QtWidgets import QWidget, QFrame, QSlider, QGridLayout, QVBoxLayout
+from PyQt5.QtWidgets import QFrame
 from PyQt5.QtCore import Qt, QPoint
 from PyQt5.QtGui import QPainter
-from ..math.diagram import CoxeterDiagram
+from polytope_visualizer.math.diagram import CoxeterDiagram
 
 
 class DiagramRenderer(QFrame):

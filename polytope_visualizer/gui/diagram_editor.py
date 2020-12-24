@@ -2,7 +2,7 @@ from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QWidget, QSlider, QPushButton, QSpinBox
 from PyQt5.QtCore import Qt
 
-from ..math.diagram import CoxeterDiagram
+from polytope_visualizer.math.diagram import CoxeterDiagram
 from .slider import LabelledSlider
 from .diagram_renderer import DiagramRenderer
 
@@ -85,6 +85,7 @@ class DiagramEditor(QWidget):
         toggle = QPushButton()
         toggle.setCheckable(True)
         toggle.clicked.connect(lambda: self.diagramChanged.emit(self.diagram()))
+        toggle.setStyleSheet("QPushButton { background-color: rgb(200,200,200) }")
         self.node_widgets.append(toggle)
         self.button_layout.insertWidget(self.button_layout.count() - 1, toggle)
 
