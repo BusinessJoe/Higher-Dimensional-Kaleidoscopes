@@ -12,4 +12,15 @@ def project(p, screen_dist, eye_dist):
     return p, height_ratio
 
 
+def project_3d(points):
+    """Projects the points orthographically to 3d"""
+    dimension = points.shape[1]
+    if dimension >= 3:
+        return points[:, :3]
+    else:
+        zeros = np.zeros((points.shape[0], dimension + 1))
+        zeros[:, :-1] = points
+        return zeros
+
+
 v_project = np.vectorize(project, signature='(i),(),()->(n),()')

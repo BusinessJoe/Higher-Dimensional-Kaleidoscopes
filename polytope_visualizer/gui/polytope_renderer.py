@@ -7,7 +7,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPainter
 
 import numpy as np
-from polytope_visualizer.math.project_down import v_project
+from polytope_visualizer.math.project_down import v_project, project_3d
 from polytope_visualizer.math.rotate import v_rotate
 from polytope_visualizer.math.diagram import CoxeterDiagram
 from .slider import LabelledSlider
@@ -94,13 +94,17 @@ class Renderer(QWidget):
     def draw_polytope(self):
         rotated_points = self.points * self.scaling
 
-        rotated_points = v_rotate(rotated_points, float(self.angles[0]), 0, 1, self.diagram.dimension)
-        rotated_points = v_rotate(rotated_points, float(self.angles[1]), 0, 2, self.diagram.dimension)
-        rotated_points = v_rotate(rotated_points, float(self.angles[2]), 1, 2, self.diagram.dimension)
+        # Do pre-projection rotations here
 
+        # Post-projection rotations happen in 3d
         proj_points = np.copy(rotated_points)
-        while proj_points.shape[1] != 2:
-            proj_points, heights = v_project(proj_points, self.screen_dist, self.eye_dist)
+        proj_points = project_3d(proj_points)
+        #
+        proj_points = v_rotate(proj_points, float(self.angles[0]), 0, 1)
+        proj_points = v_rotate(proj_points, float(self.angles[1]), 0, 2)
+        proj_points = v_rotate(proj_points, float(self.angles[2]), 1, 2)
+
+        proj_points, heights = v_project(proj_points, self.screen_dist, self.eye_dist)
 
         heights = np.reshape(heights, (-1, 1))
         heights *= self.dot_size
