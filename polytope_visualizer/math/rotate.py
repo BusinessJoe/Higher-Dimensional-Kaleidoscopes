@@ -2,7 +2,9 @@ import numpy as np
 import math
 
 
-def rotate(point, angle, axis1, axis2, dimension):
+def rotate(point, angle, axis1, axis2):
+    """Rotates the point with the plane defined by the two axes"""
+    dimension = len(point)
     matrix = np.identity(dimension)
 
     matrix[axis1][axis1] = math.cos(angle)
@@ -13,8 +15,8 @@ def rotate(point, angle, axis1, axis2, dimension):
     return np.matmul(point, matrix)
 
 
-v_rotate = np.vectorize(rotate, signature='(i),(),(),(),()->(n)')
+v_rotate = np.vectorize(rotate, signature='(i),(),(),()->(n)')
 
 if __name__ == '__main__':
     sample = np.array([[1, 1], [-1, -1]])
-    print(v_rotate(sample, math.pi/4, 0, 1, 2))
+    print(v_rotate(sample, math.pi/4, 0, 1))
