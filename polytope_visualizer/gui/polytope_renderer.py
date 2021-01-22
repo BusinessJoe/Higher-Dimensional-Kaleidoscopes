@@ -29,7 +29,8 @@ class Renderer(QWidget):
         self.eye_dist = 600
 
         # Set up a zero array for the angles
-        self.angles = [0, 0, 0]
+        self.angles_3d = [0.0, 0.0, 0.0]
+        self.rotors = []
 
         self.canvas = RenderArea(self.width, self.height)
         self.init_ui()
@@ -95,14 +96,19 @@ class Renderer(QWidget):
         rotated_points = self.points * self.scaling
 
         # Do pre-projection rotations here
+        for r in self.rotors:
+            try:
+                rotated_points = r.rotate(rotated_points)
+            except IndexError:
+                pass
 
         # Post-projection rotations happen in 3d
         proj_points = np.copy(rotated_points)
         proj_points = project_3d(proj_points)
         #
-        proj_points = v_rotate(proj_points, float(self.angles[0]), 0, 1)
-        proj_points = v_rotate(proj_points, float(self.angles[1]), 0, 2)
-        proj_points = v_rotate(proj_points, float(self.angles[2]), 1, 2)
+        proj_points = v_rotate(proj_points, float(self.angles_3d[0]), 0, 1)
+        proj_points = v_rotate(proj_points, float(self.angles_3d[1]), 0, 2)
+        proj_points = v_rotate(proj_points, float(self.angles_3d[2]), 1, 2)
 
         proj_points, heights = v_project(proj_points, self.screen_dist, self.eye_dist)
 
@@ -122,7 +128,7 @@ class Renderer(QWidget):
         self.points = diagram.polytope()
 
     def update_angle(self, index, value):
-        self.angles[index] = value * math.pi / 180
+        self.angles_3d[index] = value * math.pi / 180
 
     def set_scale(self, scale):
         self.scaling = scale
@@ -135,6 +141,9 @@ class Renderer(QWidget):
 
     def set_eye_dist(self, dist):
         self.eye_dist = dist
+
+    def set_rotors(self, rotors):
+        self.rotors = rotors
 
 
 class RenderArea(QFrame):

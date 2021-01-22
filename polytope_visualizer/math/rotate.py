@@ -17,6 +17,29 @@ def rotate(point, angle, axis1, axis2):
 
 v_rotate = np.vectorize(rotate, signature='(i),(),(),()->(n)')
 
-if __name__ == '__main__':
-    sample = np.array([[1, 1], [-1, -1]])
-    print(v_rotate(sample, math.pi/4, 0, 1))
+
+def reflect(vector, normal):
+    return vector - 2 * np.dot(vector, np.atleast_2d(normal).T) / np.dot(normal, normal) * normal
+
+
+class Rotor:
+    def __init__(self, axis1, axis2, angle=0.0):
+        self.axes = [axis1, axis2]
+        self.angle = angle
+
+    def rotate(self, points):
+        dimension = points.shape[1]
+        a = np.zeros((dimension,))
+        a[self.axes[0]] = 1
+
+        R = np.eye(dimension)
+        s, c = np.sin(self.angle/2), np.cos(self.angle/2)
+        R[self.axes[0], self.axes[0]] = c
+        R[self.axes[0], self.axes[1]] = -s
+        R[self.axes[1], self.axes[0]] = s
+        R[self.axes[1], self.axes[1]] = c
+
+        b = R.dot(a)
+
+        return reflect(reflect(points, a), b)
+
