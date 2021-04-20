@@ -15,5 +15,6 @@ if __name__ == "__main__":
 
     app = QtWidgets.QApplication(sys.argv)
     mainWin = MainWindow()
+    mainWin.setWindowTitle("Kaleidoscope - Lukas Boelling")
     mainWin.show()
     sys.exit(app.exec_())
