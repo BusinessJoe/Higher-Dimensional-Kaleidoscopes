@@ -1,0 +1,511 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="b1f66f70-7fee-4475-bf16-d7fcd5703fa7" name="Default" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <excluded-from-favorite>
+      <branch-storage>
+        <map>
+          <entry type="LOCAL">
+            <value>
+              <list>
+                <branch-info repo="$PROJECT_DIR$" source="master" />
+              </list>
+            </value>
+          </entry>
+        </map>
+      </branch-storage>
+    </excluded-from-favorite>
+    <favorite-branches>
+      <branch-storage>
+        <map>
+          <entry type="LOCAL">
+            <value>
+              <list>
+                <branch-info repo="$PROJECT_DIR$" source="main" />
+              </list>
+            </value>
+          </entry>
+        </map>
+      </branch-storage>
+    </favorite-branches>
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RESET_MODE" value="HARD" />
+  </component>
+  <component name="ProjectId" id="1lQrAL4R4JknBGkAiCyvKBQAlfR" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+    <option name="showMembers" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="SearchEverywhereHistoryKey" value="lambda&#9;null&#9;null" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/New Scratch File" value="Python" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Lukas\PycharmProjects\PolytopeVisualizer" />
+      <recent name="C:\Users\Lukas\PycharmProjects\PolytopeVisualizer\resources" />
+      <recent name="C:\Users\Lukas\PycharmProjects\PolytopeVisualizer\polytope_visualizer" />
+      <recent name="C:\Users\Lukas\PycharmProjects\PolytopeVisualizer\src\polytope_visualizer\math" />
+      <recent name="C:\Users\Lukas\PycharmProjects\PolytopeVisualizer\src\polytope_visualizer" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.opengl_intro">
+    <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="PolytopeVisualizer" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="opengl_intro" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="PolytopeVisualizer" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/opengl_intro.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Unittests for math.tests.test_diagram.TestDiagramGenerationMethods" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
+      <module name="PolytopeVisualizer" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/polytope_visualizer" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;math.tests.test_diagram.TestDiagramGenerationMethods&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Python.main" />
+      <item itemvalue="Python tests.Unittests for math.tests.test_diagram.TestDiagramGenerationMethods" />
+      <item itemvalue="Python.opengl_intro" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.opengl_intro" />
+        <item itemvalue="Python tests.Unittests for math.tests.test_diagram.TestDiagramGenerationMethods" />
+        <item itemvalue="Python.main" />
+        <item itemvalue="Python tests.Unittests for math.tests.test_diagram.TestDiagramGenerationMethods" />
+        <item itemvalue="Python.main" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="project-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="b1f66f70-7fee-4475-bf16-d7fcd5703fa7" name="Default" comment="" />
+      <created>1545627876802</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1545627876802</updated>
+      <workItem from="1610564642689" duration="3777000" />
+      <workItem from="1610911985345" duration="168000" />
+      <workItem from="1611332744364" duration="21957000" />
+      <workItem from="1612142677740" duration="1205000" />
+      <workItem from="1612288299157" duration="2115000" />
+      <workItem from="1612743978624" duration="207000" />
+      <workItem from="1618954021402" duration="6044000" />
+      <workItem from="1619060108416" duration="90000" />
+      <workItem from="1619371930876" duration="392000" />
+      <workItem from="1619372338783" duration="66000" />
+      <workItem from="1619372407304" duration="318000" />
+    </task>
+    <task id="LOCAL-00001" summary="Add old project files&#10;&#10;This is an old project that I created before I used good practices in my code.&#10;It was able to take simple Coxeter-Dynkin diagrams and render them as 3d polytopes.&#10;I think the concept is really cool, so I'd like to refactor it so that I don't feel ashamed about the code quality.">
+      <created>1607541480915</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1607541480915</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Add docstrings">
+      <created>1607545994004</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1607545994004</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Create a class for Coxeter diagrams&#10;&#10;The CoxeterDiagram class in diagram.py moves the functionality of coordinate_generator.py into a class.">
+      <created>1607548749532</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1607548749532</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Remove clutter from namespace&#10;&#10;For some reason, a matrix called sample was defined at the top of the file, but only used in the __main__ block. Its definition was moved into the __main__ block.">
+      <created>1607548920206</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1607548920206</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Create class for rendering Coxeter diagrams">
+      <created>1607550771789</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1607550771789</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Move main code into __main__ block">
+      <created>1607551122805</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1607551122805</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Restructure project files&#10;&#10;Organize source files into packages.">
+      <created>1607551563624</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1607551563624</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Add readme">
+      <created>1607552263194</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1607552263194</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Move readme to correct place">
+      <created>1607552332646</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1607552332646</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Fix imports">
+      <created>1607554511448</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1607554511448</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Fix starting vertex generation&#10;&#10;It seems like inverting certain intersection vectors so that they all point in the same direction fixes the starting vertex generation.">
+      <created>1607890243143</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1607890243143</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Automatically redraw polytope each frame&#10;&#10;Call renderer.draw() each frame instead of explicitly calling it each time a change is made.&#10;Doing this removes the need to have self.draw() in each parameter setting function for the renderer.">
+      <created>1607890964073</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1607890964073</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Add upper bound to number of generated points&#10;&#10;If the number of points during polytope generation rises above 100, raise a ValueError.&#10;This prevents extremely high amounts of points to be generated which can freeze the program.">
+      <created>1607891503347</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1607891503347</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Fix removing duplicate points&#10;&#10;The old algorithm rounded the coordinates of each point to 5 decimal places and removed duplicates.&#10;Returning rounded points adds a lot of error to the coordinates. &#10;Use the rounded points to determine which points to remove, but return the original coordinates instead.">
+      <created>1607891652941</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1607891652941</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Fill spheres in rendering&#10;&#10;Adding a fill to the spheres makes the resulting image easier to interpret.">
+      <created>1607894185007</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1607894185007</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Create PyQt widget for editing Coxeter diagrams">
+      <created>1608743091772</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1608743091772</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Replace tkinter with PyQt5">
+      <created>1608753462041</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1608753462041</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Add border around render area">
+      <created>1608753965053</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1608753965053</updated>
+    </task>
+    <task id="LOCAL-00019" summary="Push widgets to top of window">
+      <created>1608754015603</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1608754015603</updated>
+    </task>
+    <task id="LOCAL-00020" summary="Move math-related modules into a math package">
+      <created>1608754418776</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1608754418776</updated>
+    </task>
+    <task id="LOCAL-00021" summary="Label sliders">
+      <created>1608756293888</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1608756293888</updated>
+    </task>
+    <task id="LOCAL-00022" summary="Add some type hints">
+      <created>1608759971198</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1608759971198</updated>
+    </task>
+    <task id="LOCAL-00023" summary="Add a window for viewing the Coxeter diagram">
+      <created>1608760761808</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1608760761808</updated>
+    </task>
+    <task id="LOCAL-00024" summary="Set default polytope to a cube">
+      <created>1608762579316</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1608762579316</updated>
+    </task>
+    <task id="LOCAL-00025" summary="Add requirements.txt">
+      <created>1608763705149</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1608763705149</updated>
+    </task>
+    <task id="LOCAL-00026" summary="Remove unnecessary src package">
+      <created>1608770762258</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1608770762258</updated>
+    </task>
+    <task id="LOCAL-00027" summary="Move main module outside of project package">
+      <created>1608770924668</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1608770924668</updated>
+    </task>
+    <task id="LOCAL-00028" summary="Update projection algorithm&#10;&#10;Doing perspective projections from Nd to 3d doesn't make any sense since&#10;the screen and eye aren't Nd objects. Instead, do an orthographic &#10;projection to 3d before projecting to the 2d screen. &#10;&#10;As a bonus, 2d polygons are now correctly projected to 3d.">
+      <created>1611334231246</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1611334231246</updated>
+    </task>
+    <task id="LOCAL-00029" summary="Remove redundant parameter in rotation function&#10;&#10;The dimension of a point can be gotten from the point itself so it isn't&#10;needed as a parameter.">
+      <created>1611334293519</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1611334293519</updated>
+    </task>
+    <task id="LOCAL-00030" summary="Add some preview images">
+      <created>1611334321555</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1611334321555</updated>
+    </task>
+    <task id="LOCAL-00031" summary="Add interface for N dimensional rotations">
+      <created>1611359189754</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1611359189754</updated>
+    </task>
+    <task id="LOCAL-00032" summary="Add name to window title">
+      <created>1618957644824</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1618957644824</updated>
+    </task>
+    <task id="LOCAL-00033" summary="Update showcase images">
+      <created>1618959502595</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1618959502595</updated>
+    </task>
+    <task id="LOCAL-00034" summary="Update readme">
+      <created>1618964017323</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1618964017324</updated>
+    </task>
+    <task id="LOCAL-00035" summary="Add gitignore">
+      <created>1619372037640</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1619372037640</updated>
+    </task>
+    <task id="LOCAL-00036" summary="Update requirements.txt">
+      <created>1619372296565</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1619372296565</updated>
+    </task>
+    <option name="localTasksCounter" value="37" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="CUSTOM_BOOLEAN_PROPERTIES">
+                <map>
+                  <entry key="Show.Git.Branches" value="false" />
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <ignored-roots>
+      <path value="$USER_HOME$/Desktop/Python/Projects" />
+      <path value="$USER_HOME$/Desktop/Python/Projects/CoxeterDiagram" />
+    </ignored-roots>
+    <MESSAGE value="Automatically redraw polytope each frame&#10;&#10;Call renderer.draw() each frame instead of explicitly calling it each time a change is made.&#10;Doing this removes the need to have self.draw() in each parameter setting function for the renderer." />
+    <MESSAGE value="Add upper bound to number of generated points&#10;&#10;If the number of points during polytope generation rises above 100, raise a ValueError.&#10;This prevents extremely high amounts of points to be generated which can freeze the program." />
+    <MESSAGE value="Fix removing duplicate points&#10;&#10;The old algorithm rounded the coordinates of each point to 5 decimal places and removed duplicates.&#10;Returning rounded points adds a lot of error to the coordinates. &#10;Use the rounded points to determine which points to remove, but return the original coordinates instead." />
+    <MESSAGE value="Fill spheres in rendering&#10;&#10;Adding a fill to the spheres makes the resulting image easier to interpret." />
+    <MESSAGE value="Create PyQt widget for editing Coxeter diagrams" />
+    <MESSAGE value="Replace tkinter with PyQt5" />
+    <MESSAGE value="Add border around render area" />
+    <MESSAGE value="Push widgets to top of window" />
+    <MESSAGE value="Move math-related modules into a math package" />
+    <MESSAGE value="Label sliders" />
+    <MESSAGE value="Add some type hints" />
+    <MESSAGE value="Add a window for viewing the Coxeter diagram" />
+    <MESSAGE value="Set default polytope to a cube" />
+    <MESSAGE value="Add requirements.txt" />
+    <MESSAGE value="Remove unnecessary src package" />
+    <MESSAGE value="Move main module outside of project package" />
+    <MESSAGE value="Update projection algorithm&#10;&#10;Doing perspective projections from Nd to 3d doesn't make any sense since&#10;the screen and eye aren't Nd objects. Instead, do an orthographic &#10;projection to 3d before projecting to the 2d screen. &#10;&#10;As a bonus, 2d polygons are now correctly projected to 3d." />
+    <MESSAGE value="Remove redundant parameter in rotation function&#10;&#10;The dimension of a point can be gotten from the point itself so it isn't&#10;needed as a parameter." />
+    <MESSAGE value="Add some preview images" />
+    <MESSAGE value="Add interface for N dimensional rotations" />
+    <MESSAGE value="Add name to window title" />
+    <MESSAGE value="Update showcase images" />
+    <MESSAGE value="Update readme" />
+    <MESSAGE value="Add gitignore" />
+    <MESSAGE value="Update requirements.txt" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update requirements.txt" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/../3d_2dProjection/4d2dShadow.py</url>
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/PolytopeVisualizer$diagram.coverage" NAME="diagram Coverage Results" MODIFIED="1612289869256" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/polytope_visualizer/math" />
+    <SUITE FILE_PATH="coverage/PolytopeVisualizer$rotate.coverage" NAME="rotate Coverage Results" MODIFIED="1611346485787" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/polytope_visualizer/math" />
+    <SUITE FILE_PATH="coverage/PolytopeVisualizer$opengl_intro.coverage" NAME="opengl_intro Coverage Results" MODIFIED="1619372710806" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/PolytopeVisualizer$Unittests_for_math_tests_test_diagram_TestDiagramGenerationMethods.coverage" NAME="Unittests for math.tests.test_diagram.TestDiagramGenerationMethods Coverage Results" MODIFIED="1612290822792" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/polytope_visualizer" />
+    <SUITE FILE_PATH="coverage/PolytopeVisualizer$main.coverage" NAME="main Coverage Results" MODIFIED="1618958242205" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+  </component>
+</project>
