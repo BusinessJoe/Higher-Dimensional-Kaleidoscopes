@@ -6,6 +6,8 @@ from PyQt5.QtGui import QPainter
 from polytope_visualizer.math.project_down import v_project
 from polytope_visualizer.math.rotate import v_rotate
 
+import math
+
 
 class RenderArea(QFrame):
     """Handles rendering of 3d points"""
@@ -51,11 +53,12 @@ class RenderArea(QFrame):
         self.update()
 
     def draw_polytope(self):
-        proj_points = self.points
+        self.projected_points = self._project_points(self.points)
 
-        proj_points = v_rotate(proj_points, float(self.angles_3d[0]), 0, 1)
-        proj_points = v_rotate(proj_points, float(self.angles_3d[1]), 0, 2)
-        proj_points = v_rotate(proj_points, float(self.angles_3d[2]), 1, 2)
+    def _project_points(self, points):
+        proj_points = v_rotate(points, float(math.radians(self.angles_3d[0])), 0, 1)
+        proj_points = v_rotate(proj_points, float(math.radians(self.angles_3d[1])), 0, 2)
+        proj_points = v_rotate(proj_points, float(math.radians(self.angles_3d[2])), 1, 2)
 
         proj_points, heights = v_project(proj_points, self.screen_dist, self.eye_dist)
 
@@ -68,4 +71,4 @@ class RenderArea(QFrame):
         indices = np.argsort(heights, axis=0)
         sorted_points_and_heights = np.take_along_axis(points_and_heights, indices, axis=0)
 
-        self.projected_points = sorted_points_and_heights
+        return sorted_points_and_heights

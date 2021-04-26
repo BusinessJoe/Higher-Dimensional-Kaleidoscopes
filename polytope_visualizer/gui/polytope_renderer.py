@@ -11,6 +11,7 @@ from polytope_visualizer.math.rotate import v_rotate
 from polytope_visualizer.math.diagram import CoxeterDiagram
 from .slider import LabelledSlider
 from .render_area import RenderArea
+from .opengl_render_area import OpenGLRenderArea
 
 
 class Renderer(QWidget):
@@ -26,6 +27,8 @@ class Renderer(QWidget):
         self.rotors = []
 
         self.canvas = RenderArea(self.width, self.height)
+        self.canvas = OpenGLRenderArea()
+        self.canvas.show()
         self.init_ui()
 
         self.timer = QtCore.QTimer()
@@ -106,7 +109,7 @@ class Renderer(QWidget):
         self.points = diagram.polytope()
 
     def update_angle(self, index, value):
-        self.canvas.angles_3d[index] = value * math.pi / 180
+        self.canvas.angles_3d[index] = value
 
     def set_scale(self, scale):
         self.canvas.scaling = scale
