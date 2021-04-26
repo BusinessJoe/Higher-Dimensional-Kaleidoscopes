@@ -80,17 +80,16 @@ class GLWidget(QtOpenGL.QGLWidget):
         GLU.gluPerspective(45, aspect, 1, 100)
         gl.glMatrixMode(gl.GL_MODELVIEW)
 
-    def paintGL(self):
-        gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
+    def cube(self, x_offset):
+        gl.glPushMatrix()  # push the current matrix to the current stack
 
-        gl.glPushMatrix()       # push the current matrix to the current stack
-
-        gl.glTranslate(0.0, 0.0, -50.0)     # third, translate cube to specified depth
-        gl.glScale(20.0, 20.0, 20.0)        # second, scale cube
+        gl.glTranslate(0.0, 0.0, -50.0)  # third, translate cube to specified depth
         gl.glRotate(self.rotX, 1, 0, 0)
         gl.glRotate(self.rotY, 0, 1, 0)
         gl.glRotate(self.rotZ, 0, 0, 1)
-        gl.glTranslate(-0.5, -0.5, -0.5)    # first, translate cube center to origin
+        gl.glTranslate(x_offset, 0.0, 0.0)  # third, translate cube to specified depth
+        gl.glScale(20.0, 20.0, 20.0)  # second, scale cube
+        gl.glTranslate(-0.5, -0.5, -0.5)  # first, translate cube center to origin
 
         gl.glEnableClientState(gl.GL_VERTEX_ARRAY)
         gl.glEnableClientState(gl.GL_COLOR_ARRAY)
@@ -103,7 +102,13 @@ class GLWidget(QtOpenGL.QGLWidget):
         gl.glDisableClientState(gl.GL_VERTEX_ARRAY)
         gl.glDisableClientState(gl.GL_COLOR_ARRAY)
 
-        gl.glPopMatrix()    # restore the previous modelview matrix
+        gl.glPopMatrix()  # restore the previous modelview matrix
+
+    def paintGL(self):
+        gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
+
+        self.cube(-10)
+        self.cube(10)
 
     def init_geometry(self):
         self.cube_vtx_array = np.array(
