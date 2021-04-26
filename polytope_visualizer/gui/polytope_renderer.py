@@ -2,15 +2,15 @@ import math
 from functools import partial
 
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import QWidget, QFrame, QGridLayout, QVBoxLayout
+from PyQt5.QtWidgets import QWidget, QGridLayout, QVBoxLayout
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QPainter
 
 import numpy as np
 from polytope_visualizer.math.project_down import v_project, project_3d
 from polytope_visualizer.math.rotate import v_rotate
 from polytope_visualizer.math.diagram import CoxeterDiagram
 from .slider import LabelledSlider
+from .render_area import RenderArea
 
 
 class Renderer(QWidget):
@@ -23,13 +23,6 @@ class Renderer(QWidget):
         self.width = 600
         self.height = 600
 
-        self.scaling = 100
-        self.dot_size = 20
-        self.screen_dist = 300
-        self.eye_dist = 600
-
-        # Set up a zero array for the angles
-        self.angles_3d = [0.0, 0.0, 0.0]
         self.rotors = []
 
         self.canvas = RenderArea(self.width, self.height)
@@ -57,7 +50,7 @@ class Renderer(QWidget):
         slider = LabelledSlider("Scale", Qt.Horizontal)
         slider.sl.setMinimum(0)
         slider.sl.setMaximum(300)
-        slider.sl.setValue(self.scaling)
+        slider.sl.setValue(self.canvas.scaling)
         slider.sl.setMaximumWidth(200)
         slider.sl.valueChanged.connect(self.set_scale)
         grid.addWidget(slider, 0, 1)
@@ -66,7 +59,7 @@ class Renderer(QWidget):
         slider = LabelledSlider("Screen Distance", Qt.Horizontal)
         slider.sl.setMinimum(0)
         slider.sl.setMaximum(1000)
-        slider.sl.setValue(self.screen_dist)
+        slider.sl.setValue(self.canvas.screen_dist)
         slider.sl.setMaximumWidth(200)
         slider.sl.valueChanged.connect(self.set_screen_dist)
         grid.addWidget(slider, 1, 1)
@@ -75,7 +68,7 @@ class Renderer(QWidget):
         slider = LabelledSlider("Eye Distance", Qt.Horizontal)
         slider.sl.setMinimum(0)
         slider.sl.setMaximum(1000)
-        slider.sl.setValue(self.eye_dist)
+        slider.sl.setValue(self.canvas.eye_dist)
         slider.sl.setMaximumWidth(200)
         slider.sl.valueChanged.connect(self.set_eye_dist)
         grid.addWidget(slider, 2, 1)
@@ -84,7 +77,7 @@ class Renderer(QWidget):
         slider = LabelledSlider("Dot Size", Qt.Horizontal)
         slider.sl.setMinimum(0)
         slider.sl.setMaximum(100)
-        slider.sl.setValue(self.dot_size)
+        slider.sl.setValue(self.canvas.dot_size)
         slider.sl.setMaximumWidth(200)
         slider.sl.valueChanged.connect(self.set_dot_size)
         grid.addWidget(slider, 0, 2)
@@ -93,7 +86,7 @@ class Renderer(QWidget):
         self.setLayout(vlayout)
 
     def draw_polytope(self):
-        rotated_points = self.points * self.scaling
+        rotated_points = self.points * self.canvas.scaling
 
         # Do pre-projection rotations here
         for r in self.rotors:
@@ -105,73 +98,27 @@ class Renderer(QWidget):
         # Post-projection rotations happen in 3d
         proj_points = np.copy(rotated_points)
         proj_points = project_3d(proj_points)
-        #
-        proj_points = v_rotate(proj_points, float(self.angles_3d[0]), 0, 1)
-        proj_points = v_rotate(proj_points, float(self.angles_3d[1]), 0, 2)
-        proj_points = v_rotate(proj_points, float(self.angles_3d[2]), 1, 2)
 
-        proj_points, heights = v_project(proj_points, self.screen_dist, self.eye_dist)
-
-        heights = np.reshape(heights, (-1, 1))
-        heights *= self.dot_size
-
-        points_and_heights = np.concatenate((proj_points, heights), axis=1)
-
-        # Sort points based on distance to camera
-        indices = np.argsort(heights, axis=0)
-        sorted_points_and_heights = np.take_along_axis(points_and_heights, indices, axis=0)
-
-        self.canvas.set_points(sorted_points_and_heights)
+        self.canvas.set_points(proj_points)
 
     def set_diagram(self, diagram: CoxeterDiagram):
         self.diagram = diagram
         self.points = diagram.polytope()
 
     def update_angle(self, index, value):
-        self.angles_3d[index] = value * math.pi / 180
+        self.canvas.angles_3d[index] = value * math.pi / 180
 
     def set_scale(self, scale):
-        self.scaling = scale
+        self.canvas.scaling = scale
 
     def set_dot_size(self, size):
-        self.dot_size = size
+        self.canvas.dot_size = size
 
     def set_screen_dist(self, dist):
-        self.screen_dist = dist
+        self.canvas.screen_dist = dist
 
     def set_eye_dist(self, dist):
-        self.eye_dist = dist
+        self.canvas.eye_dist = dist
 
     def set_rotors(self, rotors):
         self.rotors = rotors
-
-
-class RenderArea(QFrame):
-    def __init__(self, width, height):
-        super().__init__()
-
-        self.points = []
-
-        self.width, self.height = width, height
-        self.setMinimumSize(width, height)
-
-        self.setStyleSheet("""border:2px solid rgb(0, 0, 0);
-        """)
-
-    def paintEvent(self, e):
-        qp = QPainter()
-        qp.begin(self)
-        qp.setBrush(Qt.white)
-        self.draw_points(qp)
-        qp.end()
-
-    def draw_points(self, qp):
-        for p in self.points:
-            qp.drawEllipse(int(p[0] - p[2] + self.width / 2),
-                           int(p[1] - p[2] + self.height / 2),
-                           int(2 * p[2]),
-                           int(2 * p[2]))
-
-    def set_points(self, points):
-        self.points = points
-        self.update()
