@@ -1,16 +1,14 @@
 from PyQt5 import QtCore
-from PyQt5 import QtGui
 from PyQt5 import QtWidgets
 from PyQt5 import QtOpenGL
 
 import OpenGL.GL as gl
-from OpenGL.GL import shaders
-from OpenGL import GLU
-from OpenGL.arrays import vbo
 import numpy as np
 
 import sys
 import ctypes
+import time
+import math
 
 from load_shader import load_shaders
 
@@ -24,11 +22,11 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.glWidget = GLWidget(self)
         self.initGUI()
-        #
-        # timer = QtCore.QTimer(self)
-        # timer.setInterval(20)
-        # timer.timeout.connect(self.glWidget.updateGL)
-        # timer.start()
+
+        timer = QtCore.QTimer(self)
+        timer.setInterval(20)
+        timer.timeout.connect(self.glWidget.updateGL)
+        timer.start()
 
     def initGUI(self):
         central_widget = QtWidgets.QWidget()
@@ -42,6 +40,8 @@ class GLWidget(QtOpenGL.QGLWidget):
     def __init__(self, parent=None):
         QtOpenGL.QGLWidget.__init__(self, parent)
         self.parent = parent
+
+        self.greenValue = 0
 
     def initializeGL(self) -> None:
         self.program = load_shaders("shader.vert", "shader.frag")
@@ -76,15 +76,20 @@ class GLWidget(QtOpenGL.QGLWidget):
         gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0)
         gl.glBindVertexArray(0)
 
-        gl.glPolygonMode(gl.GL_FRONT_AND_BACK, gl.GL_LINE)
+        # gl.glPolygonMode(gl.GL_FRONT_AND_BACK, gl.GL_LINE)
 
     def paintGL(self):
         gl.glClearColor(0.2, 0.3, 0.3, 1.0)
         gl.glClear(gl.GL_COLOR_BUFFER_BIT)
 
         gl.glUseProgram(self.program)
+
+        time_value = time.time()
+        self.greenValue = (math.sin(time_value) / 2) + 0.5
+        vertex_color_location = gl.glGetUniformLocation(self.program, "ourColor")
+        gl.glUniform4f(vertex_color_location, 0.0, self.greenValue, 0.0, 1.0)
+
         gl.glBindVertexArray(self.vertex_array)
-        # gl.glDrawArrays(gl.GL_TRIANGLES, 0, 6)
         gl.glDrawElements(gl.GL_TRIANGLES, 6, gl.GL_UNSIGNED_INT, ctypes.c_void_p(0))
         gl.glBindVertexArray(0)
 
@@ -96,6 +101,12 @@ class GLWidget(QtOpenGL.QGLWidget):
         # aspect = w / h
         # GLU.gluPerspective(45, aspect, 1, 100)
         # gl.glMatrixMode(gl.GL_MODELVIEW)
+
+    # def updateGL(self) -> None:
+    #     time_value = time.time()
+    #     self.greenValue = (math.sin(time_value) / 2) + 0.5
+    #     vertex_color_location = gl.glGetUniformLocation(self.program, "ourColor")
+    #     gl.glUseProgram()
 
 
 if __name__ == "__main__":
