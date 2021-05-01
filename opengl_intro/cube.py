@@ -1,3 +1,5 @@
+import time
+
 from PyQt5 import QtCore
 from PyQt5 import QtWidgets
 from PyQt5 import QtOpenGL
@@ -8,7 +10,7 @@ import numpy as np
 import sys
 import ctypes
 
-from load_shader import load_shaders
+from load_shader import Shader
 import transformations as trans
 
 
@@ -40,59 +42,62 @@ class GLWidget(QtOpenGL.QGLWidget):
         QtOpenGL.QGLWidget.__init__(self, parent)
         self.parent = parent
 
-        self.greenValue = 0
+        self.angle = 0
 
     def initializeGL(self) -> None:
-        self.program = load_shaders("shader.vert", "shader.frag")
+        gl.glEnable(gl.GL_DEPTH_TEST)
+
+        shader = Shader("shader.vert", "shader.frag")
+        self.program = shader.use()
 
         # positions followed by rgb values
         vertices = np.array([
             -0.5, -0.5, -0.5, 0.0, 0.0,
-            0.5, -0.5, -0.5, 1.0, 0.0,
-            0.5, 0.5, -0.5, 1.0, 1.0,
-            0.5, 0.5, -0.5, 1.0, 1.0,
-            -0.5, 0.5, -0.5, 0.0, 1.0,
-            -0.5, -0.5, -0.5, 0.0, 0.0,
+            0.5, -0.5, -0.5, 0.0, 0.2,
+            0.5, 0.5, -0.5, 0.0, 0.4,
+            0.5, 0.5, -0.5, 0.0, 0.6,
+            -0.5, 0.5, -0.5, 0.0, 0.8,
+            -0.5, -0.5, -0.5, 0.0, 1.0,
 
-            -0.5, -0.5, 0.5, 0.0, 0.0,
-            0.5, -0.5, 0.5, 1.0, 0.0,
-            0.5, 0.5, 0.5, 1.0, 1.0,
-            0.5, 0.5, 0.5, 1.0, 1.0,
-            -0.5, 0.5, 0.5, 0.0, 1.0,
-            -0.5, -0.5, 0.5, 0.0, 0.0,
+            -0.5, -0.5, 0.5, 0.2, 0.0,
+            0.5, -0.5, 0.5, 0.2, 0.2,
+            0.5, 0.5, 0.5, 0.2, 0.4,
+            0.5, 0.5, 0.5, 0.2, 0.6,
+            -0.5, 0.5, 0.5, 0.2, 0.8,
+            -0.5, -0.5, 0.5, 0.2, 1.0,
 
-            -0.5, 0.5, 0.5, 1.0, 0.0,
+            -0.5, 0.5, 0.5, 0.4, 0.0,
+            -0.5, 0.5, -0.5, 0.4, 0.2,
+            -0.5, -0.5, -0.5, 0.4, 0.4,
+            -0.5, -0.5, -0.5, 0.4, 0.6,
+            -0.5, -0.5, 0.5, 0.4, 0.8,
+            -0.5, 0.5, 0.5, 0.4, 1.0,
+
+            0.5, 0.5, 0.5, 0.6, 0.0,
+            0.5, 0.5, -0.5, 0.6, 0.2,
+            0.5, -0.5, -0.5, 0.6, 0.4,
+            0.5, -0.5, -0.5, 0.6, 0.6,
+            0.5, -0.5, 0.5, 0.6, 0.8,
+            0.5, 0.5, 0.5, 0.6, 1.0,
+
+            -0.5, -0.5, -0.5, 0.8, 0.0,
+            0.5, -0.5, -0.5, 0.8, 0.2,
+            0.5, -0.5, 0.5, 0.8, 0.4,
+            0.5, -0.5, 0.5, 0.8, 0.6,
+            -0.5, -0.5, 0.5, 0.8, 0.8,
+            -0.5, -0.5, -0.5, 0.8, 1.0,
+
+            -0.5, 0.5, -0.5, 1.0, 0.0,
+            0.5, 0.5, -0.5, 1.0, 0.2,
+            0.5, 0.5, 0.5, 1.0, 0.4,
+            0.5, 0.5, 0.5, 1.0, 0.6,
+            -0.5, 0.5, 0.5, 1.0, 0.8,
             -0.5, 0.5, -0.5, 1.0, 1.0,
-            -0.5, -0.5, -0.5, 0.0, 1.0,
-            -0.5, -0.5, -0.5, 0.0, 1.0,
-            -0.5, -0.5, 0.5, 0.0, 0.0,
-            -0.5, 0.5, 0.5, 1.0, 0.0,
-
-            0.5, 0.5, 0.5, 1.0, 0.0,
-            0.5, 0.5, -0.5, 1.0, 1.0,
-            0.5, -0.5, -0.5, 0.0, 1.0,
-            0.5, -0.5, -0.5, 0.0, 1.0,
-            0.5, -0.5, 0.5, 0.0, 0.0,
-            0.5, 0.5, 0.5, 1.0, 0.0,
-
-            -0.5, -0.5, -0.5, 0.0, 1.0,
-            0.5, -0.5, -0.5, 1.0, 1.0,
-            0.5, -0.5, 0.5, 1.0, 0.0,
-            0.5, -0.5, 0.5, 1.0, 0.0,
-            -0.5, -0.5, 0.5, 0.0, 0.0,
-            -0.5, -0.5, -0.5, 0.0, 1.0,
-
-            -0.5, 0.5, -0.5, 0.0, 1.0,
-            0.5, 0.5, -0.5, 1.0, 1.0,
-            0.5, 0.5, 0.5, 1.0, 0.0,
-            0.5, 0.5, 0.5, 1.0, 0.0,
-            -0.5, 0.5, 0.5, 0.0, 0.0,
-            -0.5, 0.5, -0.5, 0.0, 1.0,
         ], np.float32)
-        indices = np.array([
-            0, 1, 3,
-            1, 2, 3,
-        ], np.uint32)
+        # indices = np.array([
+        #     0, 1, 3,
+        #     1, 2, 3,
+        # ], np.uint32)
 
         self.vertex_array = gl.glGenVertexArrays(1)
         self.vertex_buffer = gl.glGenBuffers(1)
@@ -111,8 +116,8 @@ class GLWidget(QtOpenGL.QGLWidget):
         gl.glVertexAttribPointer(0, 3, gl.GL_FLOAT, gl.GL_FALSE, 5 * 4, ctypes.c_void_p(0))
         gl.glEnableVertexAttribArray(0)
         # color attribute
-        # gl.glVertexAttribPointer(1, 3, gl.GL_FLOAT, gl.GL_FALSE, 6 * 4, ctypes.c_void_p(3 * 4))
-        # gl.glEnableVertexAttribArray(1)
+        gl.glVertexAttribPointer(1, 3, gl.GL_FLOAT, gl.GL_FALSE, 2 * 4, ctypes.c_void_p(5 * 4))
+        gl.glEnableVertexAttribArray(1)
 
         # gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0)
         # gl.glBindVertexArray(0)
@@ -121,7 +126,7 @@ class GLWidget(QtOpenGL.QGLWidget):
 
     def paintGL(self):
         gl.glClearColor(0.2, 0.3, 0.3, 1.0)
-        gl.glClear(gl.GL_COLOR_BUFFER_BIT)
+        gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
 
         gl.glUseProgram(self.program)
 
@@ -129,7 +134,7 @@ class GLWidget(QtOpenGL.QGLWidget):
         model = np.identity(4)
         view = np.identity(4)
         projection = np.identity(4)
-        model = trans.rotate(model, np.radians(-55), np.array((1, 0, 0), np.float32))
+        model = trans.rotate(model, self.angle, np.array((0.5, 1.0, 0), np.float32))
         view = trans.translate(view, np.array((0, 0, -3), np.float32))
         projection = trans.perspective(np.radians(45), self.width() / self.height(), 0.1, 100.0)
         # retrieve the matrix uniform locations
@@ -156,11 +161,10 @@ class GLWidget(QtOpenGL.QGLWidget):
         # GLU.gluPerspective(45, aspect, 1, 100)
         # gl.glMatrixMode(gl.GL_MODELVIEW)
 
-    # def updateGL(self) -> None:
-    #     time_value = time.time()
-    #     self.greenValue = (math.sin(time_value) / 2) + 0.5
-    #     vertex_color_location = gl.glGetUniformLocation(self.program, "ourColor")
-    #     gl.glUseProgram()
+    def updateGL(self) -> None:
+        time_value = time.time()
+        self.angle = time_value * np.radians(50)
+        self.repaint()
 
 
 if __name__ == "__main__":
