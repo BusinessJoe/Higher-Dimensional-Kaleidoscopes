@@ -98,6 +98,13 @@ class GLWidget(QtOpenGL.QGLWidget):
         #     0, 1, 3,
         #     1, 2, 3,
         # ], np.uint32)
+        # cube offsets
+        self.cube_offsets = np.array([
+            [0.0, 0.0, 0.0],
+            [2.0, 5.0, -15.0],
+            [-1.5, -2.2, -2.5],
+            [-3.8, -.0, -12.3],
+        ], np.float32)
 
         self.vertex_array = gl.glGenVertexArrays(1)
         self.vertex_buffer = gl.glGenBuffers(1)
@@ -131,25 +138,29 @@ class GLWidget(QtOpenGL.QGLWidget):
         gl.glUseProgram(self.program)
 
         # create transformations
-        model = np.identity(4)
         view = np.identity(4)
         projection = np.identity(4)
-        model = trans.rotate(model, self.angle, np.array((0.5, 1.0, 0), np.float32))
         view = trans.translate(view, np.array((0, 0, -3), np.float32))
         projection = trans.perspective(np.radians(45), self.width() / self.height(), 0.1, 100.0)
         # retrieve the matrix uniform locations
-        model_loc = gl.glGetUniformLocation(self.program, "model")
         view_loc = gl.glGetUniformLocation(self.program, "view")
         projection_loc = gl.glGetUniformLocation(self.program, "projection")
         # pass them to the shaders
-        gl.glUniformMatrix4fv(model_loc, 1, gl.GL_FALSE, model)
         gl.glUniformMatrix4fv(view_loc, 1, gl.GL_FALSE, view)
         gl.glUniformMatrix4fv(projection_loc, 1, gl.GL_FALSE, projection)
 
         # render
         gl.glBindVertexArray(self.vertex_array)
+        for i, offset in enumerate(self.cube_offsets):
+            model = np.identity(4)
+            model = trans.translate(model, offset)
+            angle = self.angle + 20 * i
+            model = trans.rotate(model, angle, np.array((1.0, 0.3, 0.5), np.float32))
+            model_loc = gl.glGetUniformLocation(self.program, "model")
+            gl.glUniformMatrix4fv(model_loc, 1, gl.GL_FALSE, model)
+            gl.glDrawArrays(gl.GL_TRIANGLES, 0, 36)
+
         # gl.glDrawElements(gl.GL_TRIANGLES, 6, gl.GL_UNSIGNED_INT, ctypes.c_void_p(0))
-        gl.glDrawArrays(gl.GL_TRIANGLES, 0, 36)
         # gl.glBindVertexArray(0)
 
     def resizeGL(self, w: int, h: int) -> None:
