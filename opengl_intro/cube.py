@@ -7,10 +7,9 @@ import numpy as np
 
 import sys
 import ctypes
-import time
-import math
 
 from load_shader import load_shaders
+import transformations as trans
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -89,6 +88,23 @@ class GLWidget(QtOpenGL.QGLWidget):
 
         gl.glUseProgram(self.program)
 
+        # create transformations
+        model = np.identity(4)
+        view = np.identity(4)
+        projection = np.identity(4)
+        model = trans.rotate(model, np.radians(-55), np.array((1, 0, 0), np.float32))
+        view = trans.translate(view, np.array((0, 0, -3), np.float32))
+        projection = trans.perspective(np.radians(45), self.width() / self.height(), 0.1, 100.0)
+        # retrieve the matrix uniform locations
+        model_loc = gl.glGetUniformLocation(self.program, "model")
+        view_loc = gl.glGetUniformLocation(self.program, "view")
+        projection_loc = gl.glGetUniformLocation(self.program, "projection")
+        # pass them to the shaders
+        gl.glUniformMatrix4fv(model_loc, 1, gl.GL_FALSE, model)
+        gl.glUniformMatrix4fv(view_loc, 1, gl.GL_FALSE, view)
+        gl.glUniformMatrix4fv(projection_loc, 1, gl.GL_FALSE, projection)
+
+        # render
         gl.glBindVertexArray(self.vertex_array)
         gl.glDrawElements(gl.GL_TRIANGLES, 6, gl.GL_UNSIGNED_INT, ctypes.c_void_p(0))
         gl.glBindVertexArray(0)

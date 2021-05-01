@@ -5,6 +5,7 @@ from PyQt5 import QtOpenGL
 
 import OpenGL.GL as gl
 from OpenGL import GLU
+from OpenGL.GL import shaders
 
 from OpenGL.arrays import vbo       # vertex buffer objects
 import numpy as np
@@ -65,6 +66,41 @@ class GLWidget(QtOpenGL.QGLWidget):
         self.qglClearColor(QtGui.QColor(0, 0, 255))     # initialize screen to blue
         gl.glEnable(gl.GL_DEPTH_TEST)                   # enable depth testing
 
+        # Shaders
+        with open('polytope_visualizer/shader') as f:
+            vertexShaderSource = f.read()
+
+        # vertexShader = gl.glCreateShader(gl.GL_VERTEX_SHADER)
+        # gl.glShaderSource(vertexShader, 1, vertexShaderSource, 0)
+        # gl.glCompileShader(vertexShader)
+        vertexShader = shaders.compileShader(vertexShaderSource, gl.GL_VERTEX_SHADER)
+        success = gl.glGetShaderiv(vertexShader, gl.GL_COMPILE_STATUS)
+        if not success:
+            infoLog = gl.glGetShaderInfoLog(vertexShader, 512, None)
+            print(infoLog)
+
+        fragmentShaderSource = """#version 330 core
+out vec4 FragColor;
+
+void main()
+{
+    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
+} """
+
+        # fragmentShader = gl.glCreateShader(gl.GL_FRAGMENT_SHADER)
+        # gl.glShaderSource(fragmentShader, 1, fragmentShaderSource, None)
+        # gl.glCompileShader(fragmentShader)
+        fragmentShader = shaders.compileShader(fragmentShaderSource, gl.GL_FRAGMENT_SHADER)
+
+        # self.shaderProgram = gl.glCreateProgram()
+        # gl.glAttachShader(self.shaderProgram, vertexShader)
+        # gl.glAttachShader(self.shaderProgram, fragmentShader)
+        # gl.glLinkProgram(self.shaderProgram)
+        self.shaderProgram = shaders.compileProgram(vertexShader, fragmentShader)
+
+        gl.glDeleteShader(vertexShader)
+        gl.glDeleteShader(fragmentShader)
+
         self.init_geometry()
 
         self.rotX = 0.0
@@ -80,72 +116,39 @@ class GLWidget(QtOpenGL.QGLWidget):
         GLU.gluPerspective(45, aspect, 1, 100)
         gl.glMatrixMode(gl.GL_MODELVIEW)
 
-    def cube(self, x_offset):
-        gl.glPushMatrix()  # push the current matrix to the current stack
-
-        gl.glTranslate(0.0, 0.0, -50.0)  # third, translate cube to specified depth
-        gl.glRotate(self.rotX, 1, 0, 0)
-        gl.glRotate(self.rotY, 0, 1, 0)
-        gl.glRotate(self.rotZ, 0, 0, 1)
-        gl.glTranslate(x_offset, 0.0, 0.0)  # third, translate cube to specified depth
-        gl.glScale(20.0, 20.0, 20.0)  # second, scale cube
-        gl.glTranslate(-0.5, -0.5, -0.5)  # first, translate cube center to origin
-
-        gl.glEnableClientState(gl.GL_VERTEX_ARRAY)
-        gl.glEnableClientState(gl.GL_COLOR_ARRAY)
-
-        gl.glVertexPointer(3, gl.GL_FLOAT, 0, self.vert_VBO)
-        gl.glColorPointer(3, gl.GL_FLOAT, 0, self.color_VBO)
-
-        gl.glDrawElements(gl.GL_QUADS, len(self.cube_idx_array), gl.GL_UNSIGNED_INT, self.cube_idx_array)
-
-        gl.glDisableClientState(gl.GL_VERTEX_ARRAY)
-        gl.glDisableClientState(gl.GL_COLOR_ARRAY)
-
-        gl.glPopMatrix()  # restore the previous modelview matrix
-
     def paintGL(self):
-        gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
+        gl.glClearColor(0.2, 0.3, 0.3, 1.0)
+        gl.glClear(gl.GL_COLOR_BUFFER_BIT)
 
-        self.cube(-10)
-        self.cube(10)
+        gl.glUseProgram(self.shaderProgram)
+        gl.glBindVertexArray(self.VAO)
+        gl.glDrawArrays(gl.GL_TRIANGLES, 0, 3)
+
+        # self.cube(-10)
+        # self.cube(10)
 
     def init_geometry(self):
-        self.cube_vtx_array = np.array(
-            [[0.0, 0.0, 0.0],
-             [1.0, 0.0, 0.0],
-             [1.0, 1.0, 0.0],
-             [0.0, 1.0, 0.0],
-             [0.0, 0.0, 1.0],
-             [1.0, 0.0, 1.0],
-             [1.0, 1.0, 1.0],
-             [0.0, 1.0, 1.0]]
-        )
-        self.vert_VBO = vbo.VBO(np.reshape(self.cube_vtx_array,
-                                           (1, -1)).astype(np.float32))
-        self.vert_VBO.bind()
 
-        self.cube_clr_array = np.array(
-            [[0.0, 0.0, 0.0],
-             [1.0, 0.0, 0.0],
-             [1.0, 1.0, 0.0],
-             [0.0, 1.0, 0.0],
-             [0.0, 0.0, 1.0],
-             [1.0, 0.0, 1.0],
-             [1.0, 1.0, 1.0],
-             [0.0, 1.0, 1.0]]
-        )
-        self.color_VBO = vbo.VBO(np.reshape(self.cube_clr_array, (1, -1)).astype(np.float32))
-        self.color_VBO.bind()
+        vertices = np.array([
+            -0.5, -0.5, 0.0,
+             0.5, -0.5, 0.0,
+             0.0,  0.5, 0.0
+        ], np.float32)
 
-        self.cube_idx_array = np.array(
-            [0, 1, 2, 3,
-             3, 2, 6, 7,
-             1, 0, 4, 5,
-             2, 1, 5, 6,
-             0, 3, 7, 4,
-             7, 6, 5, 4]
-        )
+        self.VAO = gl.glGenVertexArrays(1)
+        self.VBO = gl.glGenBuffers(1)
+
+        gl.glBindVertexArray(self.VAO)
+
+        gl.glBindBuffer(gl.GL_ARRAY_BUFFER, self.VBO)
+        gl.glBufferData(gl.GL_ARRAY_BUFFER, len(vertices), vertices, gl.GL_STATIC_DRAW)
+
+        gl.glVertexAttribPointer(0, 3, gl.GL_FLOAT, gl.GL_FALSE, 3, 0)
+        gl.glEnableVertexAttribArray(0)
+
+        gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0)
+
+        gl.glBindVertexArray(0)
 
     def setRotX(self, val):
         self.rotX = val
