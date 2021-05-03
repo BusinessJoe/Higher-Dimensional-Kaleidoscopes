@@ -1,6 +1,6 @@
 import numpy as np
-from transformations import normalize
-from utils import add_normals
+from .transformations import normalize
+from .utils import add_normals
 
 
 def icosahedron_tris():

@@ -20,7 +20,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         QtWidgets.QMainWindow.__init__(self)
 
-        self.resize(300, 300)
+        self.resize(1500, 900)
         self.setWindowTitle("Hello OpenGL App")
 
         self.glWidget = GLWidget(self)
@@ -53,51 +53,7 @@ class GLWidget(QtOpenGL.QGLWidget):
         self.lightingShader = Shader("light_shader.vs", "light_shader.fs")
         self.lightCubeShader = Shader("light_cube.vs", "light_cube.fs")
 
-        # positions followed by rgb values
-        # vertices = np.array([
-        #     -0.5, -0.5, -0.5, 0.0, 0.0, -1.0,
-        #     0.5, -0.5, -0.5, 0.0, 0.0, -1.0,
-        #     0.5, 0.5, -0.5, 0.0, 0.0, -1.0,
-        #     0.5, 0.5, -0.5, 0.0, 0.0, -1.0,
-        #     -0.5, 0.5, -0.5, 0.0, 0.0, -1.0,
-        #     -0.5, -0.5, -0.5, 0.0, 0.0, -1.0,
-        #
-        #     -0.5, -0.5, 0.5, 0.0, 0.0, 1.0,
-        #     0.5, -0.5, 0.5, 0.0, 0.0, 1.0,
-        #     0.5, 0.5, 0.5, 0.0, 0.0, 1.0,
-        #     0.5, 0.5, 0.5, 0.0, 0.0, 1.0,
-        #     -0.5, 0.5, 0.5, 0.0, 0.0, 1.0,
-        #     -0.5, -0.5, 0.5, 0.0, 0.0, 1.0,
-        #
-        #     -0.5, 0.5, 0.5, -1.0, 0.0, 0.0,
-        #     -0.5, 0.5, -0.5, -1.0, 0.0, 0.0,
-        #     -0.5, -0.5, -0.5, -1.0, 0.0, 0.0,
-        #     -0.5, -0.5, -0.5, -1.0, 0.0, 0.0,
-        #     -0.5, -0.5, 0.5, -1.0, 0.0, 0.0,
-        #     -0.5, 0.5, 0.5, -1.0, 0.0, 0.0,
-        #
-        #     0.5, 0.5, 0.5, 1.0, 0.0, 0.0,
-        #     0.5, 0.5, -0.5, 1.0, 0.0, 0.0,
-        #     0.5, -0.5, -0.5, 1.0, 0.0, 0.0,
-        #     0.5, -0.5, -0.5, 1.0, 0.0, 0.0,
-        #     0.5, -0.5, 0.5, 1.0, 0.0, 0.0,
-        #     0.5, 0.5, 0.5, 1.0, 0.0, 0.0,
-        #
-        #     -0.5, -0.5, -0.5, 0.0, -1.0, 0.0,
-        #     0.5, -0.5, -0.5, 0.0, -1.0, 0.0,
-        #     0.5, -0.5, 0.5, 0.0, -1.0, 0.0,
-        #     0.5, -0.5, 0.5, 0.0, -1.0, 0.0,
-        #     -0.5, -0.5, 0.5, 0.0, -1.0, 0.0,
-        #     -0.5, -0.5, -0.5, 0.0, -1.0, 0.0,
-        #
-        #     -0.5, 0.5, -0.5, 0.0, 1.0, 0.0,
-        #     0.5, 0.5, -0.5, 0.0, 1.0, 0.0,
-        #     0.5, 0.5, 0.5, 0.0, 1.0, 0.0,
-        #     0.5, 0.5, 0.5, 0.0, 1.0, 0.0,
-        #     -0.5, 0.5, 0.5, 0.0, 1.0, 0.0,
-        #     -0.5, 0.5, -0.5, 0.0, 1.0, 0.0
-        # ], np.float32)
-        self.icosphere = icosphere.Icosphere(3, True)
+        self.icosphere = icosphere.Icosphere(3, False)
         vertices = self.icosphere.vertices()
 
         # first, configure the cube's VAO and VBO
@@ -155,17 +111,17 @@ class GLWidget(QtOpenGL.QGLWidget):
         gl.glBindVertexArray(self.cube_vertex_array)
         gl.glDrawArrays(gl.GL_TRIANGLES, 0, self.icosphere.count)
 
-        # also draw the lamp object
-        self.lightCubeShader.use()
-        self.lightCubeShader.set_mat4("projection", projection)
-        self.lightCubeShader.set_mat4("view", view)
-        model = np.identity(4)
-        model = trans.translate(model, self.light_pos)
-        model = trans.scale(model, np.array([0.5, 0.5, 0.5], np.float32))
-        self.lightCubeShader.set_mat4("model", model)
-
-        gl.glBindVertexArray(self.light_cube_VAO)
-        gl.glDrawArrays(gl.GL_TRIANGLES, 0, self.icosphere.count)
+        # # also draw the lamp object
+        # self.lightCubeShader.use()
+        # self.lightCubeShader.set_mat4("projection", projection)
+        # self.lightCubeShader.set_mat4("view", view)
+        # model = np.identity(4)
+        # model = trans.translate(model, self.light_pos)
+        # model = trans.scale(model, np.array([0.5, 0.5, 0.5], np.float32))
+        # self.lightCubeShader.set_mat4("model", model)
+        #
+        # gl.glBindVertexArray(self.light_cube_VAO)
+        # gl.glDrawArrays(gl.GL_TRIANGLES, 0, self.icosphere.count)
         # gl.glDrawElements(gl.GL_TRIANGLES, 6, gl.GL_UNSIGNED_INT, ctypes.c_void_p(0))
         # gl.glBindVertexArray(0)
 

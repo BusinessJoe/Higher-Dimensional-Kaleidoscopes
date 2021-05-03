@@ -51,7 +51,7 @@ class Renderer(QWidget):
         # Scale slider
         slider = LabelledSlider("Scale", Qt.Horizontal)
         slider.sl.setMinimum(0)
-        slider.sl.setMaximum(300)
+        slider.sl.setMaximum(500)
         slider.sl.setValue(self.canvas.scaling)
         slider.sl.setMaximumWidth(200)
         slider.sl.valueChanged.connect(self.canvas.set_scale)
