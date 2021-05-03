@@ -18,19 +18,22 @@ class OpenGLRenderArea(QtWidgets.QOpenGLWidget):
         self.points = []
 
         self.distance = 50
-        self.radius = 5
-        self.scaling = 80
+        self.radius = 3
+        self.scaling = 300
 
         # Set up a zero array for the angles
         self.angles_3d = [0.0, 0.0, 0.0]
         self.resize(600, 600)
 
-        self.light_pos = np.array([100, 100, 100], np.float32)
+        # opengl settings
+        self.light_pos = np.array([-100, 100, 100], np.float32)
+        self._use_shading = False
 
     def initializeGL(self) -> None:
         gl.glEnable(gl.GL_DEPTH_TEST)                   # enable depth testing
 
         self.lightingShader = Shader("polytope_visualizer/light_shader.vs", "polytope_visualizer/light_shader.fs")
+        self.noLightingShader = Shader("polytope_visualizer/no_light_shader.vs", "polytope_visualizer/no_light_shader.fs")
         self.icosphere = Icosphere(3, True)
         vertices = self.icosphere.vertices()
 
@@ -60,13 +63,19 @@ class OpenGLRenderArea(QtWidgets.QOpenGLWidget):
         gl.glMatrixMode(gl.GL_MODELVIEW)
 
     def paintGL(self) -> None:
-        gl.glClearColor(0.1, 0.1, 0.1, 1.0)
+        gl.glClearColor(0.0, 0.0, 0.0, 1.0)
         gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
 
-        self.lightingShader.use()
-        self.lightingShader.set_vec3("objectColor", 1.0, 0.5, 0.31)
-        self.lightingShader.set_vec3("lightColor", 1.0, 1.0, 1.0)
-        self.lightingShader.set_vec3v("lightPos", self.light_pos)
+        if self._use_shading:
+            shader = self.lightingShader
+            shader.use()
+            shader.set_vec3("objectColor", 1.0, 1.0, 1.0)
+            shader.set_vec3("lightColor", 1.0, 1.0, 1.0)
+            shader.set_vec3v("lightPos", self.light_pos)
+        else:
+            shader = self.noLightingShader
+            shader.use()
+            shader.set_vec3("objectColor", 1.0, 1.0, 1.0)
 
         # view/projection transforms
         projection = trans.perspective(np.radians(45), self.width() / self.height(), 0.1, 100.0)
@@ -74,15 +83,15 @@ class OpenGLRenderArea(QtWidgets.QOpenGLWidget):
         view = trans.rotate(view, np.radians(self.angles_3d[0]), np.array((1, 0, 0), np.float32))
         view = trans.rotate(view, np.radians(self.angles_3d[1]), np.array((0, 1, 0), np.float32))
         view = trans.rotate(view, np.radians(self.angles_3d[2]), np.array((0, 0, 1), np.float32))
-        self.lightingShader.set_mat4("projection", projection)
-        self.lightingShader.set_mat4("view", view)
+        shader.set_mat4("projection", projection)
+        shader.set_mat4("view", view)
 
         gl.glBindVertexArray(self.vertex_array)
         for point in self.points:
             model = np.identity(4)
             model = trans.translate(model, point/40)
             model = trans.scale(model, np.array([self.radius]*3, np.float32))
-            self.lightingShader.set_mat4("model", model)
+            shader.set_mat4("model", model)
 
             # render the cube
             gl.glBindVertexArray(self.vertex_array)
@@ -104,3 +113,6 @@ class OpenGLRenderArea(QtWidgets.QOpenGLWidget):
 
     def set_radius(self, radius):
         self.radius = radius
+
+    def set_shading(self, shading: bool):
+        self._use_shading = shading

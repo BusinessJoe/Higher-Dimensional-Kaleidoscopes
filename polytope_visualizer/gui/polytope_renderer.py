@@ -2,7 +2,7 @@ import math
 from functools import partial
 
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import QWidget, QGridLayout, QVBoxLayout
+from PyQt5.QtWidgets import QWidget, QGridLayout, QVBoxLayout, QCheckBox
 from PyQt5.QtCore import Qt
 
 import numpy as np
@@ -74,6 +74,11 @@ class Renderer(QWidget):
         slider.sl.setMaximumWidth(200)
         slider.sl.valueChanged.connect(lambda val: self.canvas.set_radius(val/10))
         grid.addWidget(slider, 2, 1)
+
+        # Lighting checkbox
+        checkbox = QCheckBox("Lighting")
+        checkbox.stateChanged.connect(lambda state: self.canvas.set_shading(state))
+        grid.addWidget(checkbox, 3, 1)
 
         vlayout.addLayout(grid)
         self.setLayout(vlayout)
