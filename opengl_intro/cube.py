@@ -97,8 +97,8 @@ class GLWidget(QtOpenGL.QGLWidget):
         #     -0.5, 0.5, 0.5, 0.0, 1.0, 0.0,
         #     -0.5, 0.5, -0.5, 0.0, 1.0, 0.0
         # ], np.float32)
-        i = icosphere.Icosahedron()
-        vertices = i.vertices
+        self.icosphere = icosphere.Icosphere(4)
+        vertices = self.icosphere.vertices()
         vertices = utils.add_normals(vertices)
 
         # first, configure the cube's VAO and VBO
@@ -154,7 +154,7 @@ class GLWidget(QtOpenGL.QGLWidget):
 
         # render the cube
         gl.glBindVertexArray(self.cube_vertex_array)
-        gl.glDrawArrays(gl.GL_TRIANGLES, 0, 180)
+        gl.glDrawArrays(gl.GL_TRIANGLES, 0, self.icosphere.count)
 
         # also draw the lamp object
         self.lightCubeShader.use()
@@ -166,7 +166,7 @@ class GLWidget(QtOpenGL.QGLWidget):
         self.lightCubeShader.set_mat4("model", model)
 
         gl.glBindVertexArray(self.light_cube_VAO)
-        gl.glDrawArrays(gl.GL_TRIANGLES, 0, 180)
+        gl.glDrawArrays(gl.GL_TRIANGLES, 0, self.icosphere.count)
         # gl.glDrawElements(gl.GL_TRIANGLES, 6, gl.GL_UNSIGNED_INT, ctypes.c_void_p(0))
         # gl.glBindVertexArray(0)
 
