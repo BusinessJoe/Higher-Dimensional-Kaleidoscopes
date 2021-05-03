@@ -63,3 +63,12 @@ def perspective(fovy, aspect, z_near, z_far):
     result[2][3] = -1
     result[3][2] = - (2 * z_far * z_near) / (z_far - z_near)
     return result
+
+
+def scale(m, v):
+    result = np.empty((4, 4))
+    result[0] = m[0] * v[0]
+    result[1] = m[1] * v[1]
+    result[2] = m[2] * v[2]
+    result[3] = m[3]
+    return result

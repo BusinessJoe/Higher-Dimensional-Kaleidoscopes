@@ -43,61 +43,58 @@ class GLWidget(QtOpenGL.QGLWidget):
         self.parent = parent
 
         self.angle = 0
+        self.light_pos = np.array([0.0, 1.0, 2], np.float32)
 
     def initializeGL(self) -> None:
         gl.glEnable(gl.GL_DEPTH_TEST)
 
-        shader = Shader("shader.vert", "shader.frag")
-        self.program = shader.use()
+        self.lightingShader = Shader("light_shader.vs", "light_shader.fs")
+        self.lightCubeShader = Shader("light_cube.vs", "light_cube.fs")
 
         # positions followed by rgb values
         vertices = np.array([
-            -0.5, -0.5, -0.5, 0.0, 0.0,
-            0.5, -0.5, -0.5, 0.0, 0.2,
-            0.5, 0.5, -0.5, 0.0, 0.4,
-            0.5, 0.5, -0.5, 0.0, 0.6,
-            -0.5, 0.5, -0.5, 0.0, 0.8,
-            -0.5, -0.5, -0.5, 0.0, 1.0,
+            -0.5, -0.5, -0.5, 0.0, 0.0, -1.0,
+            0.5, -0.5, -0.5, 0.0, 0.0, -1.0,
+            0.5, 0.5, -0.5, 0.0, 0.0, -1.0,
+            0.5, 0.5, -0.5, 0.0, 0.0, -1.0,
+            -0.5, 0.5, -0.5, 0.0, 0.0, -1.0,
+            -0.5, -0.5, -0.5, 0.0, 0.0, -1.0,
 
-            -0.5, -0.5, 0.5, 0.2, 0.0,
-            0.5, -0.5, 0.5, 0.2, 0.2,
-            0.5, 0.5, 0.5, 0.2, 0.4,
-            0.5, 0.5, 0.5, 0.2, 0.6,
-            -0.5, 0.5, 0.5, 0.2, 0.8,
-            -0.5, -0.5, 0.5, 0.2, 1.0,
+            -0.5, -0.5, 0.5, 0.0, 0.0, 1.0,
+            0.5, -0.5, 0.5, 0.0, 0.0, 1.0,
+            0.5, 0.5, 0.5, 0.0, 0.0, 1.0,
+            0.5, 0.5, 0.5, 0.0, 0.0, 1.0,
+            -0.5, 0.5, 0.5, 0.0, 0.0, 1.0,
+            -0.5, -0.5, 0.5, 0.0, 0.0, 1.0,
 
-            -0.5, 0.5, 0.5, 0.4, 0.0,
-            -0.5, 0.5, -0.5, 0.4, 0.2,
-            -0.5, -0.5, -0.5, 0.4, 0.4,
-            -0.5, -0.5, -0.5, 0.4, 0.6,
-            -0.5, -0.5, 0.5, 0.4, 0.8,
-            -0.5, 0.5, 0.5, 0.4, 1.0,
+            -0.5, 0.5, 0.5, -1.0, 0.0, 0.0,
+            -0.5, 0.5, -0.5, -1.0, 0.0, 0.0,
+            -0.5, -0.5, -0.5, -1.0, 0.0, 0.0,
+            -0.5, -0.5, -0.5, -1.0, 0.0, 0.0,
+            -0.5, -0.5, 0.5, -1.0, 0.0, 0.0,
+            -0.5, 0.5, 0.5, -1.0, 0.0, 0.0,
 
-            0.5, 0.5, 0.5, 0.6, 0.0,
-            0.5, 0.5, -0.5, 0.6, 0.2,
-            0.5, -0.5, -0.5, 0.6, 0.4,
-            0.5, -0.5, -0.5, 0.6, 0.6,
-            0.5, -0.5, 0.5, 0.6, 0.8,
-            0.5, 0.5, 0.5, 0.6, 1.0,
+            0.5, 0.5, 0.5, 1.0, 0.0, 0.0,
+            0.5, 0.5, -0.5, 1.0, 0.0, 0.0,
+            0.5, -0.5, -0.5, 1.0, 0.0, 0.0,
+            0.5, -0.5, -0.5, 1.0, 0.0, 0.0,
+            0.5, -0.5, 0.5, 1.0, 0.0, 0.0,
+            0.5, 0.5, 0.5, 1.0, 0.0, 0.0,
 
-            -0.5, -0.5, -0.5, 0.8, 0.0,
-            0.5, -0.5, -0.5, 0.8, 0.2,
-            0.5, -0.5, 0.5, 0.8, 0.4,
-            0.5, -0.5, 0.5, 0.8, 0.6,
-            -0.5, -0.5, 0.5, 0.8, 0.8,
-            -0.5, -0.5, -0.5, 0.8, 1.0,
+            -0.5, -0.5, -0.5, 0.0, -1.0, 0.0,
+            0.5, -0.5, -0.5, 0.0, -1.0, 0.0,
+            0.5, -0.5, 0.5, 0.0, -1.0, 0.0,
+            0.5, -0.5, 0.5, 0.0, -1.0, 0.0,
+            -0.5, -0.5, 0.5, 0.0, -1.0, 0.0,
+            -0.5, -0.5, -0.5, 0.0, -1.0, 0.0,
 
-            -0.5, 0.5, -0.5, 1.0, 0.0,
-            0.5, 0.5, -0.5, 1.0, 0.2,
-            0.5, 0.5, 0.5, 1.0, 0.4,
-            0.5, 0.5, 0.5, 1.0, 0.6,
-            -0.5, 0.5, 0.5, 1.0, 0.8,
-            -0.5, 0.5, -0.5, 1.0, 1.0,
+            -0.5, 0.5, -0.5, 0.0, 1.0, 0.0,
+            0.5, 0.5, -0.5, 0.0, 1.0, 0.0,
+            0.5, 0.5, 0.5, 0.0, 1.0, 0.0,
+            0.5, 0.5, 0.5, 0.0, 1.0, 0.0,
+            -0.5, 0.5, 0.5, 0.0, 1.0, 0.0,
+            -0.5, 0.5, -0.5, 0.0, 1.0, 0.0
         ], np.float32)
-        # indices = np.array([
-        #     0, 1, 3,
-        #     1, 2, 3,
-        # ], np.uint32)
         # cube offsets
         self.cube_offsets = np.array([
             [0.0, 0.0, 0.0],
@@ -106,60 +103,72 @@ class GLWidget(QtOpenGL.QGLWidget):
             [-3.8, -.0, -12.3],
         ], np.float32)
 
-        self.vertex_array = gl.glGenVertexArrays(1)
+        # first, configure the cube's VAO and VBO
+        self.cube_vertex_array = gl.glGenVertexArrays(1)
         self.vertex_buffer = gl.glGenBuffers(1)
-        # self.element_buffer = gl.glGenBuffers(1)
 
-        # 1. bind Vertex Array Object
-        gl.glBindVertexArray(self.vertex_array)
-        # 2. copy our vertices array in a buffer for OpenGL to use
         gl.glBindBuffer(gl.GL_ARRAY_BUFFER, self.vertex_buffer)
         gl.glBufferData(gl.GL_ARRAY_BUFFER, len(vertices) * 4, vertices, gl.GL_STATIC_DRAW)
-        # 3. copy our index array in a element buffer for OpenGL to use
-        # gl.glBindBuffer(gl.GL_ELEMENT_ARRAY_BUFFER, self.element_buffer)
-        # gl.glBufferData(gl.GL_ELEMENT_ARRAY_BUFFER, len(indices) * 4, indices, gl.GL_STATIC_DRAW)
-        # 4. then set our vertex attributes pointers
+
+        gl.glBindVertexArray(self.cube_vertex_array)
+
         # position attribute
-        gl.glVertexAttribPointer(0, 3, gl.GL_FLOAT, gl.GL_FALSE, 5 * 4, ctypes.c_void_p(0))
+        gl.glVertexAttribPointer(0, 3, gl.GL_FLOAT, gl.GL_FALSE, 6 * 4, ctypes.c_void_p(0))
         gl.glEnableVertexAttribArray(0)
-        # color attribute
-        gl.glVertexAttribPointer(1, 3, gl.GL_FLOAT, gl.GL_FALSE, 2 * 4, ctypes.c_void_p(5 * 4))
+        # normal attribute
+        gl.glVertexAttribPointer(1, 3, gl.GL_FLOAT, gl.GL_FLOAT, 6 * 4, ctypes.c_void_p(3 * 4))
         gl.glEnableVertexAttribArray(1)
 
-        # gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0)
-        # gl.glBindVertexArray(0)
+        # second, configure the light's VAO (VBO stays the same)
+        self.light_cube_VAO = gl.glGenVertexArrays(1)
+        gl.glBindVertexArray(self.light_cube_VAO)
 
-        # gl.glPolygonMode(gl.GL_FRONT_AND_BACK, gl.GL_LINE)
+        # we only need to bind to the VBO (to link it with glVertexAttribPointer)
+        # no need to fill it; the VBO's data already contains all we need
+        gl.glBindBuffer(gl.GL_ARRAY_BUFFER, self.vertex_buffer)
+
+        gl.glVertexAttribPointer(0, 3, gl.GL_FLOAT, gl.GL_FALSE, 6 * 4, ctypes.c_void_p(0))
+        gl.glEnableVertexAttribArray(0)
 
     def paintGL(self):
-        gl.glClearColor(0.2, 0.3, 0.3, 1.0)
+        gl.glClearColor(0.1, 0.1, 0.1, 1.0)
         gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
 
-        gl.glUseProgram(self.program)
+        # change light's position
+        self.light_pos[0] = np.sin(3*self.angle) * 2
+        self.light_pos[2] = np.cos(3*self.angle) * 2
 
-        # create transformations
-        view = np.identity(4)
-        projection = np.identity(4)
-        view = trans.translate(view, np.array((0, 0, -3), np.float32))
+        self.lightingShader.use()
+        self.lightingShader.set_vec3("objectColor", 1.0, 0.5, 0.31)
+        self.lightingShader.set_vec3("lightColor", 1.0, 1.0, 1.0)
+        self.lightingShader.set_vec3v("lightPos", self.light_pos)
+
+        # view/projection transforms
         projection = trans.perspective(np.radians(45), self.width() / self.height(), 0.1, 100.0)
-        # retrieve the matrix uniform locations
-        view_loc = gl.glGetUniformLocation(self.program, "view")
-        projection_loc = gl.glGetUniformLocation(self.program, "projection")
-        # pass them to the shaders
-        gl.glUniformMatrix4fv(view_loc, 1, gl.GL_FALSE, view)
-        gl.glUniformMatrix4fv(projection_loc, 1, gl.GL_FALSE, projection)
+        view = trans.translate(np.identity(4), np.array((0, 0, -3), np.float32))
+        view = trans.rotate(view, np.radians(45), np.array((0, 1, 0), np.float32))
+        self.lightingShader.set_mat4("projection", projection)
+        self.lightingShader.set_mat4("view", view)
 
-        # render
-        gl.glBindVertexArray(self.vertex_array)
-        for i, offset in enumerate(self.cube_offsets):
-            model = np.identity(4)
-            model = trans.translate(model, offset)
-            angle = self.angle + 20 * i
-            model = trans.rotate(model, angle, np.array((1.0, 0.3, 0.5), np.float32))
-            model_loc = gl.glGetUniformLocation(self.program, "model")
-            gl.glUniformMatrix4fv(model_loc, 1, gl.GL_FALSE, model)
-            gl.glDrawArrays(gl.GL_TRIANGLES, 0, 36)
+        # world transformation
+        model = np.identity(4)
+        self.lightingShader.set_mat4("model", model)
 
+        # render the cube
+        gl.glBindVertexArray(self.cube_vertex_array)
+        gl.glDrawArrays(gl.GL_TRIANGLES, 0, 36)
+
+        # also draw the lamp object
+        self.lightCubeShader.use()
+        self.lightCubeShader.set_mat4("projection", projection)
+        self.lightCubeShader.set_mat4("view", view)
+        model = np.identity(4)
+        model = trans.translate(model, self.light_pos)
+        model = trans.scale(model, np.array([0.5, 0.5, 0.5], np.float32))
+        self.lightCubeShader.set_mat4("model", model)
+
+        gl.glBindVertexArray(self.light_cube_VAO)
+        gl.glDrawArrays(gl.GL_TRIANGLES, 0, 36)
         # gl.glDrawElements(gl.GL_TRIANGLES, 6, gl.GL_UNSIGNED_INT, ctypes.c_void_p(0))
         # gl.glBindVertexArray(0)
 
