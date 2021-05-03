@@ -97,9 +97,8 @@ class GLWidget(QtOpenGL.QGLWidget):
         #     -0.5, 0.5, 0.5, 0.0, 1.0, 0.0,
         #     -0.5, 0.5, -0.5, 0.0, 1.0, 0.0
         # ], np.float32)
-        self.icosphere = icosphere.Icosphere(4)
+        self.icosphere = icosphere.Icosphere(3, True)
         vertices = self.icosphere.vertices()
-        vertices = utils.add_normals(vertices)
 
         # first, configure the cube's VAO and VBO
         self.cube_vertex_array = gl.glGenVertexArrays(1)

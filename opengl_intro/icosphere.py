@@ -1,5 +1,6 @@
 import numpy as np
 from transformations import normalize
+from utils import add_normals
 
 
 def icosahedron_tris():
@@ -33,6 +34,7 @@ class Icosphere:
     def __init__(self, subdivisions: int, smooth_shading: bool = False):
         self._triangles = icosahedron_tris()
         self.count = 180
+        self.smooth_shading = smooth_shading
 
         for _ in range(subdivisions):
             self._subdivide()
@@ -60,8 +62,17 @@ class Icosphere:
         ]
         return new_tris
 
+    def _add_smooth_normals(self, triangles):
+        """Smooth normals point out directly from the center of the sphere"""
+        normals = np.copy(triangles)
+        vertices = np.concatenate((triangles, normals), axis=-1)
+        vertices = np.reshape(vertices, (-1,))
+        return vertices
+
     def vertices(self):
-        # TODO: add normals
-        return np.reshape(self._triangles, (-1))
+        if not self.smooth_shading:
+            return add_normals(np.reshape(self._triangles, (-1,)))
+        else:
+            return self._add_smooth_normals(self._triangles)
 
 
