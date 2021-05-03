@@ -12,6 +12,8 @@ import ctypes
 
 from load_shader import Shader
 import transformations as trans
+import utils
+import icosphere
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -52,56 +54,52 @@ class GLWidget(QtOpenGL.QGLWidget):
         self.lightCubeShader = Shader("light_cube.vs", "light_cube.fs")
 
         # positions followed by rgb values
-        vertices = np.array([
-            -0.5, -0.5, -0.5, 0.0, 0.0, -1.0,
-            0.5, -0.5, -0.5, 0.0, 0.0, -1.0,
-            0.5, 0.5, -0.5, 0.0, 0.0, -1.0,
-            0.5, 0.5, -0.5, 0.0, 0.0, -1.0,
-            -0.5, 0.5, -0.5, 0.0, 0.0, -1.0,
-            -0.5, -0.5, -0.5, 0.0, 0.0, -1.0,
-
-            -0.5, -0.5, 0.5, 0.0, 0.0, 1.0,
-            0.5, -0.5, 0.5, 0.0, 0.0, 1.0,
-            0.5, 0.5, 0.5, 0.0, 0.0, 1.0,
-            0.5, 0.5, 0.5, 0.0, 0.0, 1.0,
-            -0.5, 0.5, 0.5, 0.0, 0.0, 1.0,
-            -0.5, -0.5, 0.5, 0.0, 0.0, 1.0,
-
-            -0.5, 0.5, 0.5, -1.0, 0.0, 0.0,
-            -0.5, 0.5, -0.5, -1.0, 0.0, 0.0,
-            -0.5, -0.5, -0.5, -1.0, 0.0, 0.0,
-            -0.5, -0.5, -0.5, -1.0, 0.0, 0.0,
-            -0.5, -0.5, 0.5, -1.0, 0.0, 0.0,
-            -0.5, 0.5, 0.5, -1.0, 0.0, 0.0,
-
-            0.5, 0.5, 0.5, 1.0, 0.0, 0.0,
-            0.5, 0.5, -0.5, 1.0, 0.0, 0.0,
-            0.5, -0.5, -0.5, 1.0, 0.0, 0.0,
-            0.5, -0.5, -0.5, 1.0, 0.0, 0.0,
-            0.5, -0.5, 0.5, 1.0, 0.0, 0.0,
-            0.5, 0.5, 0.5, 1.0, 0.0, 0.0,
-
-            -0.5, -0.5, -0.5, 0.0, -1.0, 0.0,
-            0.5, -0.5, -0.5, 0.0, -1.0, 0.0,
-            0.5, -0.5, 0.5, 0.0, -1.0, 0.0,
-            0.5, -0.5, 0.5, 0.0, -1.0, 0.0,
-            -0.5, -0.5, 0.5, 0.0, -1.0, 0.0,
-            -0.5, -0.5, -0.5, 0.0, -1.0, 0.0,
-
-            -0.5, 0.5, -0.5, 0.0, 1.0, 0.0,
-            0.5, 0.5, -0.5, 0.0, 1.0, 0.0,
-            0.5, 0.5, 0.5, 0.0, 1.0, 0.0,
-            0.5, 0.5, 0.5, 0.0, 1.0, 0.0,
-            -0.5, 0.5, 0.5, 0.0, 1.0, 0.0,
-            -0.5, 0.5, -0.5, 0.0, 1.0, 0.0
-        ], np.float32)
-        # cube offsets
-        self.cube_offsets = np.array([
-            [0.0, 0.0, 0.0],
-            [2.0, 5.0, -15.0],
-            [-1.5, -2.2, -2.5],
-            [-3.8, -.0, -12.3],
-        ], np.float32)
+        # vertices = np.array([
+        #     -0.5, -0.5, -0.5, 0.0, 0.0, -1.0,
+        #     0.5, -0.5, -0.5, 0.0, 0.0, -1.0,
+        #     0.5, 0.5, -0.5, 0.0, 0.0, -1.0,
+        #     0.5, 0.5, -0.5, 0.0, 0.0, -1.0,
+        #     -0.5, 0.5, -0.5, 0.0, 0.0, -1.0,
+        #     -0.5, -0.5, -0.5, 0.0, 0.0, -1.0,
+        #
+        #     -0.5, -0.5, 0.5, 0.0, 0.0, 1.0,
+        #     0.5, -0.5, 0.5, 0.0, 0.0, 1.0,
+        #     0.5, 0.5, 0.5, 0.0, 0.0, 1.0,
+        #     0.5, 0.5, 0.5, 0.0, 0.0, 1.0,
+        #     -0.5, 0.5, 0.5, 0.0, 0.0, 1.0,
+        #     -0.5, -0.5, 0.5, 0.0, 0.0, 1.0,
+        #
+        #     -0.5, 0.5, 0.5, -1.0, 0.0, 0.0,
+        #     -0.5, 0.5, -0.5, -1.0, 0.0, 0.0,
+        #     -0.5, -0.5, -0.5, -1.0, 0.0, 0.0,
+        #     -0.5, -0.5, -0.5, -1.0, 0.0, 0.0,
+        #     -0.5, -0.5, 0.5, -1.0, 0.0, 0.0,
+        #     -0.5, 0.5, 0.5, -1.0, 0.0, 0.0,
+        #
+        #     0.5, 0.5, 0.5, 1.0, 0.0, 0.0,
+        #     0.5, 0.5, -0.5, 1.0, 0.0, 0.0,
+        #     0.5, -0.5, -0.5, 1.0, 0.0, 0.0,
+        #     0.5, -0.5, -0.5, 1.0, 0.0, 0.0,
+        #     0.5, -0.5, 0.5, 1.0, 0.0, 0.0,
+        #     0.5, 0.5, 0.5, 1.0, 0.0, 0.0,
+        #
+        #     -0.5, -0.5, -0.5, 0.0, -1.0, 0.0,
+        #     0.5, -0.5, -0.5, 0.0, -1.0, 0.0,
+        #     0.5, -0.5, 0.5, 0.0, -1.0, 0.0,
+        #     0.5, -0.5, 0.5, 0.0, -1.0, 0.0,
+        #     -0.5, -0.5, 0.5, 0.0, -1.0, 0.0,
+        #     -0.5, -0.5, -0.5, 0.0, -1.0, 0.0,
+        #
+        #     -0.5, 0.5, -0.5, 0.0, 1.0, 0.0,
+        #     0.5, 0.5, -0.5, 0.0, 1.0, 0.0,
+        #     0.5, 0.5, 0.5, 0.0, 1.0, 0.0,
+        #     0.5, 0.5, 0.5, 0.0, 1.0, 0.0,
+        #     -0.5, 0.5, 0.5, 0.0, 1.0, 0.0,
+        #     -0.5, 0.5, -0.5, 0.0, 1.0, 0.0
+        # ], np.float32)
+        i = icosphere.Icosahedron()
+        vertices = i.vertices
+        vertices = utils.add_normals(vertices)
 
         # first, configure the cube's VAO and VBO
         self.cube_vertex_array = gl.glGenVertexArrays(1)
@@ -145,8 +143,8 @@ class GLWidget(QtOpenGL.QGLWidget):
 
         # view/projection transforms
         projection = trans.perspective(np.radians(45), self.width() / self.height(), 0.1, 100.0)
-        view = trans.translate(np.identity(4), np.array((0, 0, -3), np.float32))
-        view = trans.rotate(view, np.radians(45), np.array((0, 1, 0), np.float32))
+        view = trans.translate(np.identity(4), np.array((0, 0, -5), np.float32))
+        view = trans.rotate(view, np.radians(0), np.array((1, 0, 0), np.float32))
         self.lightingShader.set_mat4("projection", projection)
         self.lightingShader.set_mat4("view", view)
 
@@ -156,7 +154,7 @@ class GLWidget(QtOpenGL.QGLWidget):
 
         # render the cube
         gl.glBindVertexArray(self.cube_vertex_array)
-        gl.glDrawArrays(gl.GL_TRIANGLES, 0, 36)
+        gl.glDrawArrays(gl.GL_TRIANGLES, 0, 180)
 
         # also draw the lamp object
         self.lightCubeShader.use()
@@ -168,7 +166,7 @@ class GLWidget(QtOpenGL.QGLWidget):
         self.lightCubeShader.set_mat4("model", model)
 
         gl.glBindVertexArray(self.light_cube_VAO)
-        gl.glDrawArrays(gl.GL_TRIANGLES, 0, 36)
+        gl.glDrawArrays(gl.GL_TRIANGLES, 0, 180)
         # gl.glDrawElements(gl.GL_TRIANGLES, 6, gl.GL_UNSIGNED_INT, ctypes.c_void_p(0))
         # gl.glBindVertexArray(0)
 
