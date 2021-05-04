@@ -34,7 +34,7 @@ class OpenGLRenderArea(QtWidgets.QOpenGLWidget):
 
         self.lightingShader = Shader("polytope_visualizer/light_shader.vs", "polytope_visualizer/light_shader.fs")
         self.noLightingShader = Shader("polytope_visualizer/no_light_shader.vs", "polytope_visualizer/no_light_shader.fs")
-        self.icosphere = Icosphere(3, True)
+        self.icosphere = Icosphere(2, True)
         vertices = self.icosphere.vertices()
 
         # first, configure the sphere's VAO and VBO
