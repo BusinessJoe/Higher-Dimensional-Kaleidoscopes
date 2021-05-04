@@ -6,10 +6,10 @@ provided that the mirrors are arranged properly.
 
 With one arrangement, a dodecahedron is created:
 
-![Dodecahedron](resources/dodecahedron_preview.png)
+![Dodecahedron](resources/opengl_shaded_dodecahedron.png)
 
 ## Higher Dimensions
 
 Longer Coxeter diagrams correspond to higher dimensional polytopes. Here's a tesseract:
 
-![4D Cube](resources/higher_dimensional_preview.png)
+![4D Cube](resources/shaded_tesseract.png)
