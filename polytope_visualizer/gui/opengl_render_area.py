@@ -63,14 +63,14 @@ class OpenGLRenderArea(QtWidgets.QOpenGLWidget):
         gl.glMatrixMode(gl.GL_MODELVIEW)
 
     def paintGL(self) -> None:
-        gl.glClearColor(0.0, 0.0, 0.0, 1.0)
+        gl.glClearColor(0.3, 0.3, 0.3, 1.0)
         gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
 
         if self._use_shading:
             shader = self.lightingShader
             shader.use()
-            shader.set_vec3("objectColor", 1.0, 1.0, 1.0)
-            shader.set_vec3("lightColor", 1.0, 1.0, 1.0)
+            shader.set_vec3("objectColor", 124/256, 182/256, 219/156)
+            shader.set_vec3("lightColor", 1.0, 1.0, 1.0) 
             shader.set_vec3v("lightPos", self.light_pos)
         else:
             shader = self.noLightingShader
