@@ -16,10 +16,11 @@ class OpenGLRenderArea(QtWidgets.QOpenGLWidget):
         super().__init__(parent)
         self.parent = parent
         self.points = []
+        self.lines = []
 
         self.distance = 50
         self.radius = 3
-        self.scaling = 300
+        self.scaling = 10
 
         # Set up a zero array for the angles
         self.angles_3d = [0.0, 0.0, 0.0]
@@ -29,13 +30,16 @@ class OpenGLRenderArea(QtWidgets.QOpenGLWidget):
         self.light_pos = np.array([-100, 100, 100], np.float32)
         self._use_shading = False
 
+
     def initializeGL(self) -> None:
         gl.glEnable(gl.GL_DEPTH_TEST)                   # enable depth testing
 
         self.lightingShader = Shader("polytope_visualizer/light_shader.vs", "polytope_visualizer/light_shader.fs")
         self.noLightingShader = Shader("polytope_visualizer/no_light_shader.vs", "polytope_visualizer/no_light_shader.fs")
+        self.lineShader = Shader("polytope_visualizer/line_shader.vs", "polytope_visualizer/line_shader.fs")
         self.icosphere = Icosphere(2, True)
         vertices = self.icosphere.vertices()
+        print(vertices.shape)
 
         # first, configure the sphere's VAO and VBO
         self.vertex_array = gl.glGenVertexArrays(1)
@@ -53,6 +57,19 @@ class OpenGLRenderArea(QtWidgets.QOpenGLWidget):
         gl.glVertexAttribPointer(1, 3, gl.GL_FLOAT, gl.GL_FLOAT, 6 * 4, ctypes.c_void_p(3 * 4))
         gl.glEnableVertexAttribArray(1)
 
+        self.line = np.array((10, 10, 0, -10, 10, 0, 0, 0, 0, 5, 5, 5), np.float32)
+        self.line_VAO = gl.glGenVertexArrays(1)
+        self.line_VBO = gl.glGenBuffers(1)
+        gl.glBindVertexArray(self.line_VAO)
+        gl.glBindBuffer(gl.GL_ARRAY_BUFFER, self.line_VBO)
+        gl.glBufferData(gl.GL_ARRAY_BUFFER, len(self.line) * 4, self.line, gl.GL_STATIC_DRAW) # Fill the buffer with data
+
+        gl.glVertexAttribPointer(0, 3, gl.GL_FLOAT, gl.GL_FALSE, 3 * 4, ctypes.c_void_p(0)) # Specify how the buffer is converted to vertices
+        gl.glEnableVertexAttribArray(0)
+
+        gl.glBindVertexArray(0)
+
+
     def resizeGL(self, w: int, h: int) -> None:
         gl.glViewport(0, 0, w, h)
         gl.glMatrixMode(gl.GL_PROJECTION)
@@ -65,6 +82,7 @@ class OpenGLRenderArea(QtWidgets.QOpenGLWidget):
     def paintGL(self) -> None:
         gl.glClearColor(0.3, 0.3, 0.3, 1.0)
         gl.glClear(gl.GL_COLOR_BUFFER_BIT | gl.GL_DEPTH_BUFFER_BIT)
+
 
         if self._use_shading:
             shader = self.lightingShader
@@ -89,13 +107,24 @@ class OpenGLRenderArea(QtWidgets.QOpenGLWidget):
         gl.glBindVertexArray(self.vertex_array)
         for point in self.points:
             model = np.identity(4)
-            model = trans.translate(model, point/40)
+            model = trans.translate(model, point)
             model = trans.scale(model, np.array([self.radius]*3, np.float32))
             shader.set_mat4("model", model)
 
             # render the cube
             gl.glBindVertexArray(self.vertex_array)
             gl.glDrawArrays(gl.GL_TRIANGLES, 0, self.icosphere.count)
+
+
+        # Render any lines
+        self.lineShader.use()
+        self.lineShader.set_vec3("color", 1, 0, 0)
+        self.lineShader.set_mat4("projection", projection)
+        self.lineShader.set_mat4("view", view)
+        self.lineShader.set_mat4("model", np.identity(4))
+        gl.glBindVertexArray(self.line_VAO)
+        gl.glDrawArrays(gl.GL_LINES, 0, len(self.line) // 3);
+
 
     # Setters
     def set_points(self, points):
@@ -116,3 +145,4 @@ class OpenGLRenderArea(QtWidgets.QOpenGLWidget):
 
     def set_shading(self, shading: bool):
         self._use_shading = shading
+

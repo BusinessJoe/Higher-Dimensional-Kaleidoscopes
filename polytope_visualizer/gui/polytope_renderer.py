@@ -18,7 +18,7 @@ class Renderer(QWidget):
         # self.iterations = 10
         #
         self.diagram = diagram
-        self.points = diagram.polytope()
+        self.points, edges = diagram.polytope()
         self.width = 600
         self.height = 600
 
@@ -51,7 +51,7 @@ class Renderer(QWidget):
         # Scale slider
         slider = LabelledSlider("Scale", Qt.Horizontal)
         slider.sl.setMinimum(0)
-        slider.sl.setMaximum(800)
+        slider.sl.setMaximum(15)
         slider.sl.setValue(self.canvas.scaling)
         slider.sl.setMaximumWidth(200)
         slider.sl.valueChanged.connect(self.canvas.set_scale)
@@ -84,7 +84,7 @@ class Renderer(QWidget):
         self.setLayout(vlayout)
 
     def draw_polytope(self):
-        rotated_points = self.points * self.canvas.scaling
+        rotated_points = self.points
 
         # Do pre-projection rotations here
         for r in self.rotors:
@@ -97,11 +97,13 @@ class Renderer(QWidget):
         proj_points = np.copy(rotated_points)
         proj_points = project_3d(proj_points)
 
-        self.canvas.set_points(proj_points)
+        norm = np.linalg.norm(proj_points[0])
+
+        self.canvas.set_points(self.canvas.scaling * proj_points / norm)
 
     def set_diagram(self, diagram: CoxeterDiagram):
         self.diagram = diagram
-        self.points = diagram.polytope()
+        self.points, edges = diagram.polytope()
 
     def set_rotors(self, rotors):
         self.rotors = rotors
