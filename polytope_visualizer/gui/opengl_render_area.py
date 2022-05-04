@@ -11,12 +11,67 @@ from opengl_intro.icosphere import Icosphere
 import opengl_intro.transformations as trans
 
 
+class LineRenderer:
+    def __init__(self):
+        self.flag = False
+
+    def initialize_gl(self):
+        self.shader = Shader("polytope_visualizer/line_shader.vs", "polytope_visualizer/line_shader.fs")
+        self.VAO = gl.glGenVertexArrays(1)
+        self.VBO = gl.glGenBuffers(1)
+        self.view = np.identity(4)
+        self.projection = np.identity(4)
+
+        self.vertices = np.array([], np.float32)
+
+        gl.glBindVertexArray(self.VAO)
+
+        gl.glBindBuffer(gl.GL_ARRAY_BUFFER, self.VBO)
+        # Fill the buffer with data
+        gl.glBufferData(gl.GL_ARRAY_BUFFER, len(self.vertices) * 4, self.vertices, gl.GL_STATIC_DRAW) 
+
+        # Specify how the buffer is converted to vertices
+        gl.glVertexAttribPointer(0, 3, gl.GL_FLOAT, gl.GL_FALSE, 3 * 4, ctypes.c_void_p(0))
+        gl.glEnableVertexAttribArray(0)
+
+        gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0)
+        gl.glBindVertexArray(0)
+
+    def add_line(self, start, end):
+        self.vertices = np.hstack((self.vertices, start, end)).astype(np.float32)
+        #self.vertices = np.array([ 5.77350269,-5.77350269 ,5.77350269 ,5.77350269,-5.77350269, 5.77350269], np.float32)
+        print('verts', self.vertices)
+        gl.glBindBuffer(gl.GL_ARRAY_BUFFER, self.VBO)
+        gl.glBufferData(gl.GL_ARRAY_BUFFER, len(self.vertices) * 4, self.vertices, gl.GL_STATIC_DRAW)
+
+    def clear_lines(self):
+        self.vertices = np.array([], np.float32)
+        gl.glBindBuffer(gl.GL_ARRAY_BUFFER, self.VBO)
+        gl.glBufferData(gl.GL_ARRAY_BUFFER, len(self.vertices) * 4, self.vertices, gl.GL_STATIC_DRAW)
+
+    def draw(self):
+        self.shader.use()
+        self.shader.set_mat4("view", self.view)
+        self.shader.set_mat4("projection", self.projection)
+        self.shader.set_vec3("color", 1, 0, 0)
+
+        gl.glBindVertexArray(self.VAO)
+        gl.glDrawArrays(gl.GL_LINES, 0, len(self.vertices) // 3)
+
+    def set_view(self, view):
+        self.view = view
+
+    def set_projection(self, projection):
+        self.projection = projection
+
+
 class OpenGLRenderArea(QtWidgets.QOpenGLWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.parent = parent
         self.points = []
         self.lines = []
+        self.line_renderer = LineRenderer()
 
         self.distance = 50
         self.radius = 3
@@ -36,10 +91,8 @@ class OpenGLRenderArea(QtWidgets.QOpenGLWidget):
 
         self.lightingShader = Shader("polytope_visualizer/light_shader.vs", "polytope_visualizer/light_shader.fs")
         self.noLightingShader = Shader("polytope_visualizer/no_light_shader.vs", "polytope_visualizer/no_light_shader.fs")
-        self.lineShader = Shader("polytope_visualizer/line_shader.vs", "polytope_visualizer/line_shader.fs")
         self.icosphere = Icosphere(2, True)
         vertices = self.icosphere.vertices()
-        print(vertices.shape)
 
         # first, configure the sphere's VAO and VBO
         self.vertex_array = gl.glGenVertexArrays(1)
@@ -58,16 +111,7 @@ class OpenGLRenderArea(QtWidgets.QOpenGLWidget):
         gl.glEnableVertexAttribArray(1)
 
         self.line = np.array((10, 10, 0, -10, 10, 0, 0, 0, 0, 5, 5, 5), np.float32)
-        self.line_VAO = gl.glGenVertexArrays(1)
-        self.line_VBO = gl.glGenBuffers(1)
-        gl.glBindVertexArray(self.line_VAO)
-        gl.glBindBuffer(gl.GL_ARRAY_BUFFER, self.line_VBO)
-        gl.glBufferData(gl.GL_ARRAY_BUFFER, len(self.line) * 4, self.line, gl.GL_STATIC_DRAW) # Fill the buffer with data
-
-        gl.glVertexAttribPointer(0, 3, gl.GL_FLOAT, gl.GL_FALSE, 3 * 4, ctypes.c_void_p(0)) # Specify how the buffer is converted to vertices
-        gl.glEnableVertexAttribArray(0)
-
-        gl.glBindVertexArray(0)
+        self.line_renderer.initialize_gl()
 
 
     def resizeGL(self, w: int, h: int) -> None:
@@ -105,30 +149,36 @@ class OpenGLRenderArea(QtWidgets.QOpenGLWidget):
         shader.set_mat4("view", view)
 
         gl.glBindVertexArray(self.vertex_array)
+        print("radius", self.radius)
         for point in self.points:
             model = np.identity(4)
             model = trans.translate(model, point)
+            # Scale the icospheres at the origin to affect their radius
             model = trans.scale(model, np.array([self.radius]*3, np.float32))
             shader.set_mat4("model", model)
 
-            # render the cube
+            # render the vertex by drawing an icosphere
             gl.glBindVertexArray(self.vertex_array)
             gl.glDrawArrays(gl.GL_TRIANGLES, 0, self.icosphere.count)
 
 
         # Render any lines
-        self.lineShader.use()
-        self.lineShader.set_vec3("color", 1, 0, 0)
-        self.lineShader.set_mat4("projection", projection)
-        self.lineShader.set_mat4("view", view)
-        self.lineShader.set_mat4("model", np.identity(4))
-        gl.glBindVertexArray(self.line_VAO)
-        gl.glDrawArrays(gl.GL_LINES, 0, len(self.line) // 3);
+        self.line_renderer.set_projection(projection)
+        self.line_renderer.set_view(view)
+        self.line_renderer.draw()
 
 
     # Setters
     def set_points(self, points):
         self.points = points
+        print(points[0], points[0])
+        self.line_renderer.clear_lines()
+        #self.line_renderer.add_line(points[0], points[0])
+        for p in points:
+            self.line_renderer.add_line(points[0], p)
+        #self.line_renderer.add_line(
+        #        np.array((10,10,10), np.float32),
+        #        np.array((-10,10,10), np.float32))
         self.update()
 
     def set_angle(self, index, value):
@@ -145,4 +195,6 @@ class OpenGLRenderArea(QtWidgets.QOpenGLWidget):
 
     def set_shading(self, shading: bool):
         self._use_shading = shading
+        #self.line_renderer.clear_lines()
+        #self.line_renderer.add_line(np.array((0,0,0),np.float32), np.array((6,3,0),np.float32))
 
