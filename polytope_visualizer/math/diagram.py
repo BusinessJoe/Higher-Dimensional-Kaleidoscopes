@@ -29,11 +29,8 @@ class ReflectionSequence:
             point = normal_reflection(point, normal)
         return point
 
-    def _point_eq(self, p1, p2):
-        return np.all(np.isclose(p1, p2))
-
-    def __eq__(self, other):
-        return self._point_eq(self.point, other.point)
+    def is_close(self, other):
+        return np.all(np.isclose(self.point, other.point))
 
     def shares_edge_with(self, other):
         for normal in self.all_normals:
@@ -56,8 +53,10 @@ def _generate_start_point(normals, activation_values):
     for idx in range(1, intersections.shape[0]):
         if np.dot(intersections[idx], intersections[idx-1]) < 0:
             intersections[idx] *= -1
+    print('inters',intersections)
 
     v = np.matmul(intersections.T, activation_values)
+    print(v)
     return v / np.linalg.norm(v)
 
 
@@ -106,17 +105,18 @@ class CoxeterDiagram:
         start_point = _generate_start_point(normals, [1 for n in self.nodes])
 
         # Begin with only an empty sequence which represents no reflections
-        sequences = [ReflectionSequence(normals, tuple(), start_point)]
+        sequences = []
+        sequence_queue = [ReflectionSequence(normals, tuple(), start_point)]
 
-        flag = True
-        while flag:
-            flag = False
+        while sequence_queue:
+            seq = sequence_queue.pop(0)
+            sequences.append(seq)
             for idx in range(len(normals)):
-                for s in sequences:
-                    new_sequence = s.add_reflection(idx)
-                    if all(new_sequence != s2 for s2 in sequences):
-                        sequences.append(new_sequence)
-                        flag = True
+                new_sequence = seq.add_reflection(idx)
+                if all(not new_sequence.is_close(s) for s in sequences) and all(not new_sequence.is_close(s) for s in sequence_queue):
+                    sequence_queue.append(new_sequence)
+
+        print(sequences)
 
         return sequences
 
@@ -125,25 +125,38 @@ class CoxeterDiagram:
         normals = self.mirror_normals()
 
         sequences = self.find_reflection_sequences(normals)
-        print("Length:", len(sequences))
 
         start_point = _generate_start_point(normals, self.nodes)
-        points = start_point.reshape(1, -1)
+        points = np.array([], np.float32).reshape(0, start_point.shape[0])
 
         for sequence in sequences:
             reflected_point = sequence.reflect(start_point).reshape(1, -1)
             points = np.concatenate((points, reflected_point))
 
+        # Begin with edges between the start point and its images
         edges = []
-        for idx1, s1 in enumerate(sequences):
-            for idx2, s2 in enumerate(sequences):
-                if idx2 > idx1 and s1.shares_edge_with(s2):
-                    edges.append((idx1, idx2))
-
-        print(points[0])
+        edge_queue = []
+        for idx in range(len(normals)):
+            edge_queue.append((0, idx+1))
+        # Reflect the edges over and over
+        while edge_queue:
+            edge = edge_queue.pop(0)
+            edges.append(edge)
+            # Loop over each mirror normal
+            for idx in range(len(normals)):
+                # and construct a new edge by reflecting over that mirror
+                reflected_sequences = (sequences[edge[0]].add_reflection(idx), sequences[edge[1]].add_reflection(idx))
+                for idx, seq in enumerate(sequences):
+                    if seq.is_close(reflected_sequences[0]):
+                        idx1 = idx
+                    if seq.is_close(reflected_sequences[1]):
+                        idx2 = idx
+                new_edge = (idx1, idx2)
+                new_edge2 = (idx2, idx1)
+                if new_edge not in edges and new_edge not in edge_queue and new_edge2 not in edges and new_edge2 not in edge_queue:
+                    edge_queue.append(new_edge)
 
         return points, edges
-
 
 if __name__ == "__main__":
     # Poor numerical stability of algorithms creates many close points

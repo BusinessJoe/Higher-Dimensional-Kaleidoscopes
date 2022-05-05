@@ -18,7 +18,7 @@ class Renderer(QWidget):
         # self.iterations = 10
         #
         self.diagram = diagram
-        self.points, edges = diagram.polytope()
+        self.points, self.edges = diagram.polytope()
         self.width = 600
         self.height = 600
 
@@ -100,10 +100,12 @@ class Renderer(QWidget):
         norm = np.linalg.norm(proj_points[0])
 
         self.canvas.set_points(self.canvas.scaling * proj_points / norm)
+        print(self.edges)
+        self.canvas.set_edges(self.edges)
 
     def set_diagram(self, diagram: CoxeterDiagram):
         self.diagram = diagram
-        self.points, edges = diagram.polytope()
+        self.points, self.edges = diagram.polytope()
 
     def set_rotors(self, rotors):
         self.rotors = rotors

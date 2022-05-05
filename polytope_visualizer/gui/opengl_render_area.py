@@ -40,7 +40,6 @@ class LineRenderer:
     def add_line(self, start, end):
         self.vertices = np.hstack((self.vertices, start, end)).astype(np.float32)
         #self.vertices = np.array([ 5.77350269,-5.77350269 ,5.77350269 ,5.77350269,-5.77350269, 5.77350269], np.float32)
-        print('verts', self.vertices)
         gl.glBindBuffer(gl.GL_ARRAY_BUFFER, self.VBO)
         gl.glBufferData(gl.GL_ARRAY_BUFFER, len(self.vertices) * 4, self.vertices, gl.GL_STATIC_DRAW)
 
@@ -70,7 +69,6 @@ class OpenGLRenderArea(QtWidgets.QOpenGLWidget):
         super().__init__(parent)
         self.parent = parent
         self.points = []
-        self.lines = []
         self.line_renderer = LineRenderer()
 
         self.distance = 50
@@ -149,7 +147,6 @@ class OpenGLRenderArea(QtWidgets.QOpenGLWidget):
         shader.set_mat4("view", view)
 
         gl.glBindVertexArray(self.vertex_array)
-        print("radius", self.radius)
         for point in self.points:
             model = np.identity(4)
             model = trans.translate(model, point)
@@ -171,14 +168,23 @@ class OpenGLRenderArea(QtWidgets.QOpenGLWidget):
     # Setters
     def set_points(self, points):
         self.points = points
-        print(points[0], points[0])
-        self.line_renderer.clear_lines()
+        #print(points[0], points[0])
+        #self.line_renderer.clear_lines()
         #self.line_renderer.add_line(points[0], points[0])
-        for p in points:
-            self.line_renderer.add_line(points[0], p)
+        #for p in points:
+        #    self.line_renderer.add_line(points[0], p)
         #self.line_renderer.add_line(
         #        np.array((10,10,10), np.float32),
         #        np.array((-10,10,10), np.float32))
+        self.update()
+
+    def set_edges(self, edges):
+        self.edges = edges
+        self.line_renderer.clear_lines()
+        print(self.points.shape)
+        for idx1, idx2 in edges:
+            print(self.points[idx1], self.points[idx2])
+            self.line_renderer.add_line(self.points[idx1], self.points[idx2])
         self.update()
 
     def set_angle(self, index, value):
