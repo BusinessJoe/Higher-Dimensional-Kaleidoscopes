@@ -100,7 +100,6 @@ class Renderer(QWidget):
         norm = np.linalg.norm(proj_points[0])
 
         self.canvas.set_points(self.canvas.scaling * proj_points / norm)
-        print(self.edges)
         self.canvas.set_edges(self.edges)
 
     def set_diagram(self, diagram: CoxeterDiagram):

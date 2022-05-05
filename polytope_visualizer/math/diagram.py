@@ -1,5 +1,6 @@
 from typing import List
 import numpy as np
+from scipy.spatial import KDTree
 
 from ..math.utils import get_axis_vector
 
@@ -53,10 +54,8 @@ def _generate_start_point(normals, activation_values):
     for idx in range(1, intersections.shape[0]):
         if np.dot(intersections[idx], intersections[idx-1]) < 0:
             intersections[idx] *= -1
-    print('inters',intersections)
 
     v = np.matmul(intersections.T, activation_values)
-    print(v)
     return v / np.linalg.norm(v)
 
 
@@ -116,12 +115,12 @@ class CoxeterDiagram:
                 if all(not new_sequence.is_close(s) for s in sequences) and all(not new_sequence.is_close(s) for s in sequence_queue):
                     sequence_queue.append(new_sequence)
 
-        print(sequences)
 
         return sequences
 
     def polytope(self):
         """Returns the vertices of the polytope defined by this diagram"""
+        print('generating polytope...')
         normals = self.mirror_normals()
 
         sequences = self.find_reflection_sequences(normals)
@@ -133,6 +132,9 @@ class CoxeterDiagram:
             reflected_point = sequence.reflect(start_point).reshape(1, -1)
             points = np.concatenate((points, reflected_point))
 
+        print('...done generating points')
+
+        kdtree = KDTree([s.point for s in sequences])
         # Begin with edges between the start point and its images
         edges = []
         edge_queue = []
@@ -146,16 +148,18 @@ class CoxeterDiagram:
             for idx in range(len(normals)):
                 # and construct a new edge by reflecting over that mirror
                 reflected_sequences = (sequences[edge[0]].add_reflection(idx), sequences[edge[1]].add_reflection(idx))
-                for idx, seq in enumerate(sequences):
-                    if seq.is_close(reflected_sequences[0]):
-                        idx1 = idx
-                    if seq.is_close(reflected_sequences[1]):
-                        idx2 = idx
-                new_edge = (idx1, idx2)
-                new_edge2 = (idx2, idx1)
-                if new_edge not in edges and new_edge not in edge_queue and new_edge2 not in edges and new_edge2 not in edge_queue:
+                reflected_points = tuple(s.point for s in reflected_sequences)
+                idx1, idx2 = kdtree.query(reflected_points)[1]
+                if idx1 < idx2:
+                    new_edge = (idx1, idx2)
+                else:
+                    new_edge = (idx2, idx1)
+
+                if new_edge not in edges and new_edge not in edge_queue:
                     edge_queue.append(new_edge)
 
+        print('...done generating edges')
+        print('done generating polytope')
         return points, edges
 
 if __name__ == "__main__":

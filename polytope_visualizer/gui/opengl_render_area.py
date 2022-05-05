@@ -168,22 +168,12 @@ class OpenGLRenderArea(QtWidgets.QOpenGLWidget):
     # Setters
     def set_points(self, points):
         self.points = points
-        #print(points[0], points[0])
-        #self.line_renderer.clear_lines()
-        #self.line_renderer.add_line(points[0], points[0])
-        #for p in points:
-        #    self.line_renderer.add_line(points[0], p)
-        #self.line_renderer.add_line(
-        #        np.array((10,10,10), np.float32),
-        #        np.array((-10,10,10), np.float32))
         self.update()
 
     def set_edges(self, edges):
         self.edges = edges
         self.line_renderer.clear_lines()
-        print(self.points.shape)
         for idx1, idx2 in edges:
-            print(self.points[idx1], self.points[idx2])
             self.line_renderer.add_line(self.points[idx1], self.points[idx2])
         self.update()
 
@@ -201,6 +191,4 @@ class OpenGLRenderArea(QtWidgets.QOpenGLWidget):
 
     def set_shading(self, shading: bool):
         self._use_shading = shading
-        #self.line_renderer.clear_lines()
-        #self.line_renderer.add_line(np.array((0,0,0),np.float32), np.array((6,3,0),np.float32))
 
