@@ -120,7 +120,7 @@ class CoxeterDiagram:
 
         return sequences
 
-    def polytope(self, iterations=100):
+    def polytope(self):
         """Returns the vertices of the polytope defined by this diagram"""
         normals = self.mirror_normals()
 
@@ -138,31 +138,9 @@ class CoxeterDiagram:
         for idx1, s1 in enumerate(sequences):
             for idx2, s2 in enumerate(sequences):
                 if idx2 > idx1 and s1.shares_edge_with(s2):
-                    edges.append((s1.sequence, s2.sequence))
+                    edges.append((idx1, idx2))
 
         print(points[0])
-
-        return points, edges
-
-
-        # reflect points across mirrors multiple times
-        num_points_old = points.shape[0]
-        for iteration in range(iterations):
-            for d in range(self.dimension):
-                for p in range(len(points)):
-                    reflected_point = normal_reflection(points[p], normals[d])
-                    points = np.concatenate((points, reflected_point))
-                    edges.append((points[p], reflected_point))
-
-                points = remove_doubles(points)
-                if points.shape[0] > 1000:
-                    raise ValueError('Too many generated points')
-
-            # Break if no new points were created
-            num_points = points.shape[0]
-            if num_points_old == num_points:
-                break
-            num_points_old = num_points
 
         return points, edges
 
